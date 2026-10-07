@@ -1,0 +1,45 @@
+﻿Note EXE201
+100% online
+not attendance, not fap points
+Out Come 1 40%- MVP Len CH Play- App Store  doanxemtoilaai
+Out Come 2 20%- CAP (A Customer Acquisition Plan)- it nhat 2 kenh de thu hut user( quang cao, billboard, online( youtube,tiktok,facebook), da dang content, Offline ( phat to roi, chay event,bla bla bla)
+Out Come 3 40%- Number of acquired customers  
+B2B 2 khach, moi khach co it nhat 5 tk
+B2C it nhat 20 User, tra tien, chuyen tien, thong tin
+Platform 2-5 ben
+10+4 week 
+
+OC 1 deploy lên đc APK thì sau này có thể bổ sung sau nếu lên đc CH play k ?
+Link  hướng dẫn đẩy app lên ch play: https://www.youtube.com/watch?v=WdaqcqLMJJ8
+File aab, xong dự án thì xuất bản 1 file aab (chữ kí số)
+Hình minh họa cho thiết bị
+Video hướng dẫn sử dung app (link/ Phải có)
+Bảo mật/cam kết bảo mật : https://www.freeprivacypolicy.com/
+
+Link: https://www.freeprivacypolicy.com/live/a2ac940c-cfc5-4721-8989-83fe36ff657e
+
++Tài khoảng google console ( tốn 25 đô + xác minh) PHẢI CÓ TK GOOGLE PLAY CONSOLE	
+ Đăng nhập tk google console (google play)
+Tạo app: tên app, ngôn ngữ mặc định, app/games, mien phí/trả phí, chấp nhập chính sách google
+Thiết lập app -> sản xuất-> tạo bản phát hành mới : tải file aab , mô tả ghi chú của app
+Hoàn thành thông tin sau khi ra lỗi( them thông tin/chỉnh sửa các thứ theo google play yêu cầu )
+
++ về Acc console, nếu tạo acc mới thì phải có 20  tài khoản Gmail khác nhau thực hiện test 
+20 người/acc này phải tải app về điện thoại và cài đặt liên tục trong suốt 14 ngày 
+Sau 14 ngày đó, Google mới mở nút "Xin phát hành chính thức
+Bạn còn phải trả lời một bảng câu hỏi khảo sát của Google: "Bạn đã nhận phản hồi gì từ tester?", "Bạn đã sửa những lỗi gì trong 14 ngày qua?". Nếu trả lời qua loa, Google có thể từ chối và bắt test lại thêm 14 ngày nữa!
+
+có thể nhờ test chéo, mình cài app họ dể họ cài app mình trong 14 ngày/ thuê dịch vụ tester/ nhờ người có acc console k cần phải test 14 ngày đăng app len gg play hộ 
+
+
+
+
+Note Webinair 2:
+Chính xác khách hang là ai
+Họ đang gặp vấn đề gì 
+Họ đang ở trên nền tang nào
+Chúng ta muốn họ làm gì ở kên truyền thông của ta
+Để có 1 khách hang chúng ta mất bn tiền
+Sau khi chạy test thì chúng ta rút đc kinh nghiệm gì khi chạy kế hoạch lần sau
+
+Kế hoạch trên 1 trang giấy/chạy ngay đuoc vào ngày mai

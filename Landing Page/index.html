@@ -1,0 +1,2807 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Fitmate - Nền Tảng Sức Khỏe, Dinh Dưỡng & Huấn Luyện Viên Cá Nhân</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  
+  <!-- Tailwind CDN & Theme Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-surface": "#131b2e",
+            "error": "#ba1a1a",
+            "on-tertiary": "#ffffff",
+            "surface-dim": "#d2d9f4",
+            "outline-variant": "#bbcabf",
+            "secondary-fixed": "#ffddb8",
+            "on-secondary-fixed": "#2a1700",
+            "tertiary-container": "#57b48f",
+            "surface-container-low": "#f2f3ff",
+            "outline": "#6c7a71",
+            "on-primary-fixed": "#002113",
+            "surface-container-highest": "#dae2fd",
+            "surface-container": "#eaedff",
+            "surface-tint": "#006c49",
+            "secondary": "#855300",
+            "on-secondary-container": "#684000",
+            "surface-variant": "#dae2fd",
+            "on-primary": "#ffffff",
+            "background": "#faf8ff",
+            "inverse-primary": "#4edea3",
+            "inverse-on-surface": "#eef0ff",
+            "on-primary-container": "#00422b",
+            "on-error": "#ffffff",
+            "primary": "#006c49",
+            "secondary-fixed-dim": "#ffb95f",
+            "on-error-container": "#93000a",
+            "primary-container": "#10b981",
+            "on-tertiary-fixed": "#002115",
+            "primary-fixed-dim": "#4edea3",
+            "on-primary-fixed-variant": "#005236",
+            "secondary-container": "#fea619",
+            "on-tertiary-container": "#00422e",
+            "on-secondary": "#ffffff",
+            "surface-bright": "#faf8ff",
+            "on-tertiary-fixed-variant": "#00513a",
+            "tertiary-fixed-dim": "#7bd8b1",
+            "on-secondary-fixed-variant": "#653e00",
+            "tertiary-fixed": "#97f5cc",
+            "on-background": "#131b2e",
+            "surface": "#faf8ff",
+            "tertiary": "#006c4e",
+            "inverse-surface": "#1e2638",
+            "surface-container-high": "#e2e7ff",
+            "surface-container-lowest": "#ffffff",
+            "error-container": "#ffdad6",
+            "on-surface-variant": "#3c4a42",
+            "primary-fixed": "#6ffbbe"
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "margin-tablet": "2rem",
+            "margin": "1rem",
+            "gutter": "1rem",
+            "gutter-desktop": "2rem",
+            "margin-desktop": "3rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem",
+            "gutter-tablet": "1.5rem",
+            "space-lg": "1.5rem"
+          },
+          fontFamily: {
+            sans: ["'Be Vietnam Pro'", "sans-serif"],
+            body: ["'Be Vietnam Pro'", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Be Vietnam Pro', sans-serif;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+    }
+    
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f2f3ff;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #bbcabf;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #10b981;
+    }
+
+    @keyframes laserSweep {
+      0% { top: 5%; opacity: 0.8; }
+      50% { top: 90%; opacity: 1; }
+      100% { top: 5%; opacity: 0.8; }
+    }
+    .laser-line {
+      animation: laserSweep 2s ease-in-out infinite;
+    }
+
+    .modal-backdrop {
+      background-color: rgba(19, 27, 46, 0.65);
+      backdrop-filter: blur(8px);
+      transition: opacity 0.25s ease-out;
+    }
+    .modal-content {
+      animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(16px) scale(0.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+
+<body class="bg-surface font-sans text-on-surface antialiased selection:bg-primary-container selection:text-white min-h-screen flex flex-col">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ========================================================================= -->
+  <!-- HEADER & NAVIGATION -->
+  <!-- ========================================================================= -->
+  <header class="fixed top-0 inset-x-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-outline-variant/20 transition-all duration-300" id="main-header">
+    <div class="h-20 max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between gap-space-md">
+      
+      <!-- Brand Logo -->
+      <a class="flex items-center gap-2.5 group" href="#home">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center shadow-[0_4px_12px_rgba(16,185,129,0.3)] group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-white text-[24px]">vital_signs</span>
+        </div>
+        <span class="text-2xl tracking-tight text-primary font-black">Fitmate</span>
+      </a>
+
+      <!-- Desktop Nav Menu -->
+      <nav class="hidden xl:flex items-center gap-1 bg-surface-container-low/80 p-1.5 rounded-full border border-outline-variant/30" id="desktop-nav">
+        <a class="nav-link px-4 py-1.5 text-on-surface-variant hover:text-primary rounded-full transition-all text-xs font-semibold" href="#home">Trang chủ</a>
+        <a class="nav-link px-4 py-1.5 text-on-surface-variant hover:text-primary rounded-full transition-all text-xs font-semibold" href="#features">Hệ sinh thái</a>
+        <a class="nav-link px-4 py-1.5 text-on-surface-variant hover:text-primary rounded-full transition-all text-xs font-semibold" href="#nutrition">Dinh dưỡng AI</a>
+        <a class="nav-link px-4 py-1.5 text-on-surface-variant hover:text-primary rounded-full transition-all text-xs font-semibold" href="#workout-plan">Tập luyện</a>
+        <a class="nav-link px-4 py-1.5 text-on-surface-variant hover:text-primary rounded-full transition-all text-xs font-semibold" href="#coaches">Huấn luyện viên</a>
+        <a class="nav-link px-4 py-1.5 text-on-surface-variant hover:text-primary rounded-full transition-all text-xs font-semibold" href="#community">Cộng đồng</a>
+        <a class="nav-link px-4 py-1.5 text-on-surface-variant hover:text-primary rounded-full transition-all text-xs font-semibold" href="#fitmate-ai">Fitmate AI</a>
+        <a class="nav-link px-4 py-1.5 text-on-surface-variant hover:text-primary rounded-full transition-all text-xs font-semibold" href="#pricing">Gói dịch vụ</a>
+        <a class="nav-link px-4 py-1.5 text-on-surface-variant hover:text-primary rounded-full transition-all text-xs font-semibold" href="#faq">FAQ</a>
+      </nav>
+
+      <!-- Primary Action Button -->
+      <div class="hidden md:flex items-center gap-3">
+        <button class="px-6 py-2.5 bg-gradient-to-r from-primary-container to-primary hover:opacity-95 text-white font-bold text-xs rounded-full shadow-[0_4px_14px_rgba(16,185,129,0.35)] hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5" onclick="openEarlyAccessModal()" type="button">
+          <span>Trải nghiệm ngay</span>
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </button>
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <div class="flex items-center gap-2 xl:hidden">
+        <button class="px-3.5 py-1.5 bg-primary-container text-white rounded-full text-xs font-bold sm:hidden" onclick="openEarlyAccessModal()" type="button">
+          Thử ngay
+        </button>
+        <button aria-label="Mở menu" class="p-2 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" id="mobile-nav-toggle" type="button">
+          <span class="material-symbols-outlined text-[26px]">menu</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Dropdown -->
+    <div class="hidden fixed inset-x-0 top-20 bg-surface/95 backdrop-blur-2xl px-6 py-6 shadow-2xl border-b border-outline-variant/40 xl:hidden" id="mobile-drawer">
+      <nav class="flex flex-col gap-1 mb-6">
+        <a class="px-4 py-2.5 text-on-surface hover:bg-surface-container rounded-xl font-semibold text-sm transition-all" href="#home" onclick="closeMobileDrawer()">Trang chủ</a>
+        <a class="px-4 py-2.5 text-on-surface hover:bg-surface-container rounded-xl font-semibold text-sm transition-all" href="#features" onclick="closeMobileDrawer()">Hệ sinh thái</a>
+        <a class="px-4 py-2.5 text-on-surface hover:bg-surface-container rounded-xl font-semibold text-sm transition-all" href="#nutrition" onclick="closeMobileDrawer()">Dinh dưỡng AI</a>
+        <a class="px-4 py-2.5 text-on-surface hover:bg-surface-container rounded-xl font-semibold text-sm transition-all" href="#workout-plan" onclick="closeMobileDrawer()">Tập luyện</a>
+        <a class="px-4 py-2.5 text-on-surface hover:bg-surface-container rounded-xl font-semibold text-sm transition-all" href="#coaches" onclick="closeMobileDrawer()">Huấn luyện viên</a>
+        <a class="px-4 py-2.5 text-on-surface hover:bg-surface-container rounded-xl font-semibold text-sm transition-all" href="#community" onclick="closeMobileDrawer()">Cộng đồng</a>
+        <a class="px-4 py-2.5 text-on-surface hover:bg-surface-container rounded-xl font-semibold text-sm transition-all" href="#fitmate-ai" onclick="closeMobileDrawer()">Trợ lý Fitmate AI</a>
+        <a class="px-4 py-2.5 text-on-surface hover:bg-surface-container rounded-xl font-semibold text-sm transition-all" href="#pricing" onclick="closeMobileDrawer()">Gói dịch vụ</a>
+        <a class="px-4 py-2.5 text-on-surface hover:bg-surface-container rounded-xl font-semibold text-sm transition-all" href="#faq" onclick="closeMobileDrawer()">Câu hỏi thường gặp</a>
+      </nav>
+      <div class="pt-2 border-t border-outline-variant/30">
+        <button class="w-full py-3 bg-gradient-to-r from-primary-container to-primary text-white font-bold rounded-xl shadow-md text-sm text-center" onclick="closeMobileDrawer(); openEarlyAccessModal()">
+          Bắt đầu với Fitmate miễn phí
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN CONTENT -->
+  <!-- ========================================================================= -->
+  <main class="w-full pt-20 flex-1">
+    <div class="flex flex-col w-full">
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 1. HERO SECTION -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="relative overflow-hidden pt-12 pb-20 md:py-28 bg-gradient-to-b from-primary/5 via-surface to-surface" id="home">
+        <!-- Ambient Radial Glows -->
+        <div class="absolute -top-32 -left-24 w-96 h-96 bg-primary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/3 -right-24 w-[30rem] h-[30rem] bg-secondary-container/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
+            
+            <!-- Hero Text Content -->
+            <div class="lg:col-span-6 flex flex-col items-start gap-space-md z-10">
+              <!-- Live Badge -->
+              <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-md shadow-sm border border-outline-variant/30">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary-container animate-ping"></span>
+                <span class="text-xs text-primary font-bold">Nền tảng sức khỏe & thể hình cá nhân hóa</span>
+              </div>
+
+              <!-- Main Title -->
+              <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-on-surface tracking-tight leading-tight">
+                Tập luyện thông minh. Ăn uống khoa học. <br class="hidden sm:inline"/>
+                <span class="bg-gradient-to-r from-primary to-primary-container bg-clip-text text-transparent">Tiến bộ mỗi ngày.</span>
+              </h1>
+
+              <!-- Description -->
+              <p class="text-base sm:text-lg text-on-surface-variant max-w-xl leading-relaxed">
+                Fitmate giúp bạn tự động tính toán macro, nhận diện món ăn Việt bằng camera AI, tối ưu từng hiệp tập và đồng hành cùng đội ngũ huấn luyện viên có chứng chỉ chuyên môn.
+              </p>
+
+              <!-- CTAs -->
+              <div class="flex flex-wrap items-center gap-3 pt-2 w-full sm:w-auto">
+                <button onclick="openEarlyAccessModal()" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-primary text-white font-bold text-sm shadow-[0_6px_20px_rgba(16,185,129,0.35)] hover:shadow-[0_8px_25px_rgba(16,185,129,0.45)] hover:scale-105 active:scale-95 transition-all">
+                  <span>Bắt đầu với Fitmate</span>
+                  <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </button>
+                <a href="#nutrition" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface hover:bg-surface-container font-semibold text-sm border border-outline-variant/50 shadow-sm transition-all">
+                  <span>Trải nghiệm quét món ăn</span>
+                  <span class="material-symbols-outlined text-[18px]">document_scanner</span>
+                </a>
+              </div>
+
+              <!-- Honest Note -->
+              <div class="flex items-center gap-2 pt-1 text-on-surface-variant/80 text-xs">
+                <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+                <span>Dữ liệu món Việt chuẩn xác. Bạn luôn là người quyết định và xác nhận mọi chỉ số.</span>
+              </div>
+
+              <!-- Real Social Proof -->
+              <div class="mt-2 p-3 rounded-2xl bg-surface-container-low/80 border border-outline-variant/30 flex items-center gap-3 w-full sm:w-auto">
+                <div class="flex -space-x-2">
+                  <div class="w-8 h-8 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center border-2 border-white shadow-xs">TL</div>
+                  <div class="w-8 h-8 rounded-full bg-secondary-container text-white font-bold text-xs flex items-center justify-center border-2 border-white shadow-xs">MT</div>
+                  <div class="w-8 h-8 rounded-full bg-primary-container text-white font-bold text-xs flex items-center justify-center border-2 border-white shadow-xs">HL</div>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-on-surface">Được tin dùng bởi hơn <span class="text-primary font-black">2,400+</span> hội viên năng động</p>
+                  <p class="text-[11px] text-on-surface-variant">Đánh giá 4.9/5★ từ cộng đồng người yêu thể hình</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hero Phone Mockup -->
+            <div class="lg:col-span-6 relative flex justify-center items-center mt-12 lg:mt-0">
+              <div class="relative w-full max-w-[360px] sm:max-w-[400px] aspect-[9/18] bg-surface-container-lowest rounded-[44px] p-3.5 shadow-2xl border-[6px] border-surface-container-high/90">
+                
+                <!-- Camera Island -->
+                <div class="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-5 bg-on-surface rounded-full z-30 flex items-center justify-end px-3">
+                  <span class="w-2.5 h-2.5 rounded-full bg-surface-variant/40"></span>
+                </div>
+
+                <!-- Phone Screen Content -->
+                <div class="w-full h-full bg-surface-container-low rounded-[36px] p-4 pt-10 flex flex-col gap-3 overflow-hidden text-xs">
+                  
+                  <!-- Header Bar in App -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">FM</div>
+                      <div>
+                        <p class="text-[10px] text-on-surface-variant">Chào buổi sáng,</p>
+                        <p class="font-bold text-on-surface">Thanh Long</p>
+                      </div>
+                    </div>
+                    <button onclick="showToast('Thông báo: Buổi tập hôm nay lúc 18:30 cùng HLV Nam!')" class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center text-on-surface shadow-sm hover:scale-105 transition-all">
+                      <span class="material-symbols-outlined text-[18px] text-primary">notifications</span>
+                    </button>
+                  </div>
+
+                  <!-- Calo Tracker Widget -->
+                  <div class="bg-surface-container-lowest p-3.5 rounded-2xl shadow-sm flex flex-col gap-2 border border-outline-variant/30">
+                    <div class="flex items-center justify-between">
+                      <span class="text-[11px] text-on-surface-variant font-medium">Năng lượng mục tiêu</span>
+                      <span id="hero-cal-display" class="font-bold text-primary text-xs">1,850 / 2,200 kcal</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
+                      <div id="hero-cal-bar" class="h-full bg-gradient-to-r from-primary-container to-primary rounded-full transition-all duration-500" style="width: 84%;"></div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1 pt-1 text-center font-medium">
+                      <div class="bg-surface-container-low/70 py-1 rounded-lg">
+                        <span class="block text-on-surface-variant text-[9px]">Protein</span>
+                        <span class="font-bold text-primary">132g</span>
+                      </div>
+                      <div class="bg-surface-container-low/70 py-1 rounded-lg">
+                        <span class="block text-on-surface-variant text-[9px]">Carb</span>
+                        <span class="font-bold text-secondary">190g</span>
+                      </div>
+                      <div class="bg-surface-container-low/70 py-1 rounded-lg">
+                        <span class="block text-on-surface-variant text-[9px]">Chất béo</span>
+                        <span class="font-bold text-outline">48g</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Workout Today Widget -->
+                  <div class="bg-surface-container-lowest p-3 rounded-2xl shadow-sm flex items-center justify-between border border-outline-variant/30 hover:border-primary-container transition-all">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-9 h-9 rounded-xl bg-primary-container/15 text-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[20px]">fitness_center</span>
+                      </div>
+                      <div>
+                        <span class="block text-[10px] text-primary font-bold">Lịch tập hôm nay</span>
+                        <p class="font-bold text-on-surface text-xs">Ngực & Tay sau</p>
+                        <span class="text-on-surface-variant text-[10px]">45 phút • 5 bài tập</span>
+                      </div>
+                    </div>
+                    <a href="#workout-plan" class="w-8 h-8 rounded-full bg-primary-container/20 hover:bg-primary-container text-primary hover:text-white flex items-center justify-center transition-all">
+                      <span class="material-symbols-outlined text-[20px]">play_arrow</span>
+                    </a>
+                  </div>
+
+                  <!-- Last Meal Widget -->
+                  <div class="bg-surface-container-lowest p-3 rounded-2xl shadow-sm flex items-center gap-3 border border-outline-variant/30">
+                    <div class="w-10 h-10 rounded-xl bg-surface-container overflow-hidden flex-shrink-0 flex items-center justify-center bg-secondary-container/15 text-secondary">
+                      <span class="material-symbols-outlined text-[22px]">restaurant</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between">
+                        <span class="text-[10px] text-on-surface-variant">Bữa ăn gần nhất</span>
+                        <span class="text-[11px] font-bold text-secondary">520 kcal</span>
+                      </div>
+                      <p class="font-bold text-on-surface truncate text-xs">Ức gà áp chảo sốt mè</p>
+                    </div>
+                  </div>
+
+                  <!-- Streak Indicator -->
+                  <div class="bg-gradient-to-r from-secondary-container/20 to-primary-container/20 p-2.5 rounded-2xl flex items-center justify-between border border-secondary-container/30">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-secondary text-[20px]">local_fire_department</span>
+                      <span class="font-bold text-on-surface text-xs">Chuỗi 7 ngày liên tiếp</span>
+                    </div>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container-lowest text-secondary font-bold shadow-xs">Kỷ lục mới</span>
+                  </div>
+                </div>
+
+                <!-- Floating Glass Cards -->
+                <div class="absolute -top-4 -left-6 sm:-left-8 bg-surface-container-lowest/95 backdrop-blur-xl p-3 rounded-2xl shadow-xl border border-outline-variant/40 flex items-center gap-2.5 max-w-[210px] animate-bounce" style="animation-duration: 4s;">
+                  <span class="w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-white text-xs font-bold">✓</span>
+                  <div>
+                    <p class="font-bold text-on-surface text-xs leading-tight">Đã hoàn thành</p>
+                    <p class="text-[11px] text-on-surface-variant">4/5 bài tập hôm nay</p>
+                  </div>
+                </div>
+
+                <div class="absolute top-28 -right-6 sm:-right-8 bg-surface-container-lowest/95 backdrop-blur-xl px-3.5 py-2.5 rounded-2xl shadow-xl border border-outline-variant/40 flex items-center gap-2 max-w-[190px]">
+                  <span class="text-xl">🥗</span>
+                  <div>
+                    <p class="font-bold text-on-surface text-xs">Bữa trưa sạch</p>
+                    <p class="text-[11px] text-primary font-semibold">520 kcal nạp vào</p>
+                  </div>
+                </div>
+
+                <div class="absolute bottom-24 -left-8 sm:-left-10 bg-surface-container-lowest/95 backdrop-blur-xl px-3.5 py-2.5 rounded-2xl shadow-xl border border-outline-variant/40 flex items-center gap-2.5 max-w-[200px]">
+                  <div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+                    <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                  </div>
+                  <div>
+                    <p class="font-bold text-on-surface text-xs">Lịch hẹn PT</p>
+                    <p class="text-[11px] text-secondary-fixed-variant font-semibold">Hôm nay 18:30</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 2. SOCIAL PROOF & GIÁ TRỊ CỐT LÕI -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-16 bg-surface-container-low/60 relative border-y border-outline-variant/30">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="text-center max-w-2xl mx-auto mb-12">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">
+              Một hành trình sức khỏe liền mạch & khoa học
+            </h2>
+            <p class="text-sm md:text-base text-on-surface-variant mt-2">
+              Xây dựng dựa trên nguyên tắc minh bạch, dữ liệu dinh dưỡng món Việt chuẩn xác và tôn trọng quyền riêng tư người dùng.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/30 flex flex-col gap-2 hover:-translate-y-1 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-primary-container/15 text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]">fingerprint</span>
+              </div>
+              <h3 class="font-bold text-on-surface text-base pt-1">Cá nhân hóa theo chỉ số</h3>
+              <p class="text-xs text-on-surface-variant leading-relaxed">Chỉ số TDEE, macro và bài tập được kiến tạo chuyên biệt theo thể trạng và mục tiêu riêng của bạn.</p>
+            </div>
+
+            <div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/30 flex flex-col gap-2 hover:-translate-y-1 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-secondary-container/20 text-secondary flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]">sync</span>
+              </div>
+              <h3 class="font-bold text-on-surface text-base pt-1">Đồng bộ lịch & nhật ký</h3>
+              <p class="text-xs text-on-surface-variant leading-relaxed">Lịch tập luyện, buổi hẹn huấn luyện viên và nhật ký dinh dưỡng luôn thống nhất thời gian thực.</p>
+            </div>
+
+            <div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/30 flex flex-col gap-2 hover:-translate-y-1 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]">verified</span>
+              </div>
+              <h3 class="font-bold text-on-surface text-base pt-1">PT có chứng chỉ quốc tế</h3>
+              <p class="text-xs text-on-surface-variant leading-relaxed">Huấn luyện viên phải nộp chứng chỉ bằng cấp thể thao chuẩn xác trước khi công khai lịch nhận học viên.</p>
+            </div>
+
+            <div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/30 flex flex-col gap-2 hover:-translate-y-1 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-outline-variant/40 text-on-surface-variant flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]">shield</span>
+              </div>
+              <h3 class="font-bold text-on-surface text-base pt-1">Bảo mật dữ liệu tuyệt đối</h3>
+              <p class="text-xs text-on-surface-variant leading-relaxed">Toàn quyền kiểm soát thông tin cá nhân: chủ động bật tắt quyền camera, trích xuất dữ liệu bất kỳ lúc nào.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 3. HỆ SINH THÁI FITMATE -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface" id="features">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="max-w-2xl mb-12">
+            <span class="text-xs text-primary font-bold tracking-wider uppercase">Tính năng toàn diện</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight mt-1">
+              Mọi công cụ bạn cần, gói gọn trong một ứng dụng
+            </h2>
+            <p class="text-base text-on-surface-variant mt-2">
+              Không cần chuyển đổi qua lại giữa nhiều ứng dụng rời rạc. Fitmate tập hợp cả hệ thống sức khỏe, huấn luyện viên và cộng đồng vào một trải nghiệm mượt mà.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Bento Card 1 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[28px] shadow-sm hover:shadow-md border border-outline-variant/30 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-[28px]">dashboard</span>
+                </div>
+                <h3 class="text-lg font-bold text-on-surface mb-2">Tổng quan cá nhân hóa</h3>
+                <ul class="space-y-2 text-on-surface-variant text-xs">
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Năng lượng đã nạp, mục tiêu TDEE và tiêu hao chính xác</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Lịch tập và lịch hẹn hôm nay được kết nối trực tiếp</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Chuỗi ngày duy trì (Streak) thúc đẩy động lực bền bỉ</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-2 border-t border-surface-container">
+                <a href="#home" class="text-xs text-primary font-bold flex items-center gap-1 hover:underline">
+                  <span>Xem trên màn hình chính</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Bento Card 2 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[28px] shadow-sm hover:shadow-md border border-outline-variant/30 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-secondary-container/20 text-secondary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-[28px]">restaurant</span>
+                </div>
+                <h3 class="text-lg font-bold text-on-surface mb-2">Dinh dưỡng món Việt thông minh</h3>
+                <ul class="space-y-2 text-on-surface-variant text-xs">
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Quét chụp món ăn bằng camera AI, bóc tách thành phần</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Tự do điều chỉnh khẩu phần (1.0x, 1.5x) trước khi lưu</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Theo dõi Calories, Protein, Carb và Chất béo chuẩn xác</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-2 border-t border-surface-container">
+                <a href="#nutrition" class="text-xs text-secondary font-bold flex items-center gap-1 hover:underline">
+                  <span>Trải nghiệm máy quét bên dưới</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Bento Card 3 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[28px] shadow-sm hover:shadow-md border border-outline-variant/30 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-primary-container/20 text-primary-container flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-[28px]">fitness_center</span>
+                </div>
+                <h3 class="text-lg font-bold text-on-surface mb-2">Tập luyện & Ghi nhận hiệp tạ</h3>
+                <ul class="space-y-2 text-on-surface-variant text-xs">
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Thư viện bài tập video hướng dẫn chi tiết</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Bộ đếm thời gian nghỉ tự động và ghi nhận mức tạ lũy tiến</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Tự lưu và khôi phục hiệp tập nếu bị gián đoạn</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-2 border-t border-surface-container">
+                <a href="#workout-plan" class="text-xs text-primary font-bold flex items-center gap-1 hover:underline">
+                  <span>Mở phòng tập tương tác</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Bento Card 4 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[28px] shadow-sm hover:shadow-md border border-outline-variant/30 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-tertiary-container/20 text-tertiary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-[28px]">sports</span>
+                </div>
+                <h3 class="text-lg font-bold text-on-surface mb-2">Huấn luyện viên cá nhân (PT)</h3>
+                <ul class="space-y-2 text-on-surface-variant text-xs">
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Hồ sơ PT công khai chứng chỉ chuyên môn (NASM, ACE)</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Xem lịch trống và đặt lịch tập chỉ với vài thao tác</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Chính sách minh bạch: Hủy miễn phí trước 24 giờ</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-2 border-t border-surface-container">
+                <a href="#coaches" class="text-xs text-tertiary font-bold flex items-center gap-1 hover:underline">
+                  <span>Xem danh sách PT & Đặt lịch</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Bento Card 5 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[28px] shadow-sm hover:shadow-md border border-outline-variant/30 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-[28px]">groups</span>
+                </div>
+                <h3 class="text-lg font-bold text-on-surface mb-2">Cộng đồng chia sẻ thành tích</h3>
+                <ul class="space-y-2 text-on-surface-variant text-xs">
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Chia sẻ album ảnh hành trình thay đổi hình thể</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Theo dõi hashtag chủ đề: #TienBoMoiNgay, #GiamCan</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Bình luận, thả tim và trao đổi kinh nghiệm cùng bạn bè</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-2 border-t border-surface-container">
+                <a href="#community" class="text-xs text-primary font-bold flex items-center gap-1 hover:underline">
+                  <span>Xem bảng tin tương tác</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Bento Card 6 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[28px] shadow-sm hover:shadow-md border border-outline-variant/30 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-secondary-container/20 text-secondary-container flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-[28px]">smart_toy</span>
+                </div>
+                <h3 class="text-lg font-bold text-on-surface mb-2">Trợ lý Fitmate AI tiếng Việt</h3>
+                <ul class="space-y-2 text-on-surface-variant text-xs">
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Hỏi đáp dinh dưỡng & bài tập bằng tiếng Việt tự nhiên</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Gợi ý thực đơn ăn sạch phù hợp với thực phẩm chợ Việt</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check</span>
+                    <span>Hiển thị suy nghĩ minh bạch, có cảnh báo an toàn y khoa</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-2 border-t border-surface-container">
+                <a href="#fitmate-ai" class="text-xs text-secondary font-bold flex items-center gap-1 hover:underline">
+                  <span>Trò chuyện cùng AI ngay</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 4. DINH DƯỠNG AI: INTERACTIVE FOOD SCANNER -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface-container-low/50 relative overflow-hidden border-t border-outline-variant/30" id="nutrition">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
+            
+            <!-- Food Scanner UI Card -->
+            <div class="lg:col-span-6 flex justify-center order-2 lg:order-1">
+              <div class="w-full max-w-[420px] bg-surface-container-lowest rounded-[36px] p-5 shadow-2xl border border-outline-variant/40 flex flex-col gap-4">
+                
+                <!-- Scanner Header -->
+                <div class="flex items-center justify-between pb-1 border-b border-surface-container">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[20px]">document_scanner</span>
+                    <span class="font-bold text-on-surface text-xs">Fitmate Food Lens (AI)</span>
+                  </div>
+                  <label class="cursor-pointer text-[11px] text-primary hover:underline font-semibold flex items-center gap-1 bg-primary/10 px-2.5 py-1 rounded-full">
+                    <span class="material-symbols-outlined text-[14px]">upload</span> Tải ảnh món ăn
+                    <input type="file" id="custom-food-upload" accept="image/*" class="hidden"/>
+                  </label>
+                </div>
+
+                <!-- Sample dish quick pills -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1" id="food-preset-pills">
+                  <button onclick="selectFoodPreset(0)" class="food-pill active px-3 py-1 rounded-full text-xs font-semibold bg-primary-container text-white transition-all whitespace-nowrap">
+                    Phở Bò Tái Nạm
+                  </button>
+                  <button onclick="selectFoodPreset(1)" class="food-pill px-3 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface transition-all whitespace-nowrap">
+                    Cơm Tấm Sườn Bì
+                  </button>
+                  <button onclick="selectFoodPreset(2)" class="food-pill px-3 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface transition-all whitespace-nowrap">
+                    Salad Ức Gà Bơ
+                  </button>
+                  <button onclick="selectFoodPreset(3)" class="food-pill px-3 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface transition-all whitespace-nowrap">
+                    Bún Bò Huế
+                  </button>
+                </div>
+
+                <!-- Camera Scanned Image Card with Laser Line -->
+                <div class="relative w-full aspect-video rounded-2xl overflow-hidden shadow-inner bg-slate-900 group">
+                  <img id="scanned-food-img" class="w-full h-full object-cover transition-opacity duration-300" src="https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&w=800&q=80" alt="Món ăn Việt Nam"/>
+                  
+                  <!-- Green laser beam sweep line -->
+                  <div id="scanner-laser" class="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-container to-transparent shadow-[0_0_12px_#10b981] laser-line"></div>
+                  
+                  <!-- Scanner overlay badge -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent flex items-end p-3.5">
+                    <span id="scanned-food-label" class="text-white text-xs font-bold flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-primary-container text-[18px]">verified</span>
+                      <span>Đã nhận diện: Phở Bò Tái Nạm (Độ tin cậy 96%)</span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Ingredients Breakdown Chips -->
+                <div class="flex flex-wrap gap-1.5" id="ingredients-chips">
+                  <span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant text-[11px] font-medium">Thịt bò tái 150g</span>
+                  <span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant text-[11px] font-medium">Bánh phở tươi 200g</span>
+                  <span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant text-[11px] font-medium">Nước dùng hầm xương</span>
+                  <span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant text-[11px] font-medium">Hành lá & rau thơm</span>
+                </div>
+
+                <!-- Dynamic Macros Bar -->
+                <div class="grid grid-cols-4 gap-2 bg-surface-container-low p-3 rounded-2xl text-center border border-outline-variant/30">
+                  <div>
+                    <span class="text-[10px] text-on-surface-variant block font-medium">Calo</span>
+                    <span id="macro-calo" class="text-base font-extrabold text-on-surface">540</span>
+                    <span class="text-[9px] text-on-surface-variant block">kcal</span>
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-on-surface-variant block font-medium">Protein</span>
+                    <span id="macro-protein" class="text-base font-extrabold text-primary">38g</span>
+                    <span class="text-[9px] text-primary/70 block">Đạm</span>
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-on-surface-variant block font-medium">Carb</span>
+                    <span id="macro-carb" class="text-base font-extrabold text-secondary">62g</span>
+                    <span class="text-[9px] text-secondary/70 block">Tinh bột</span>
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-on-surface-variant block font-medium">Chất béo</span>
+                    <span id="macro-fat" class="text-base font-extrabold text-outline">12g</span>
+                    <span class="text-[9px] text-outline/70 block">Lipid</span>
+                  </div>
+                </div>
+
+                <!-- Portion Selector -->
+                <div class="flex items-center justify-between pt-1">
+                  <span class="text-xs text-on-surface-variant font-bold">Khẩu phần đã ăn:</span>
+                  <div class="flex items-center bg-surface-container p-1 rounded-full text-xs font-bold" id="portion-buttons">
+                    <button onclick="setPortion(0.5)" class="portion-btn px-2.5 py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all" type="button">0.5x</button>
+                    <button onclick="setPortion(1.0)" class="portion-btn active px-2.5 py-1 rounded-full bg-surface-container-lowest shadow-sm text-primary transition-all" type="button">1.0x</button>
+                    <button onclick="setPortion(1.5)" class="portion-btn px-2.5 py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all" type="button">1.5x</button>
+                    <button onclick="setPortion(2.0)" class="portion-btn px-2.5 py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all" type="button">2.0x</button>
+                  </div>
+                </div>
+
+                <!-- Confirm Action Button -->
+                <button id="save-meal-btn" onclick="confirmSaveMeal()" class="w-full py-3 rounded-full bg-primary-container hover:bg-primary text-white font-bold text-xs shadow-md hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2" type="button">
+                  <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                  <span>Lưu vào nhật ký dinh dưỡng</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Content Steps -->
+            <div class="lg:col-span-6 flex flex-col gap-space-md order-1 lg:order-2">
+              <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-secondary-fixed/50 text-secondary w-fit text-xs font-bold">
+                <span class="material-symbols-outlined text-[16px]">photo_camera</span> Nhận diện ảnh món ăn Việt Nam
+              </div>
+
+              <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">
+                Hiểu rõ bữa ăn trước khi bấm lưu
+              </h2>
+
+              <p class="text-base text-on-surface-variant leading-relaxed">
+                Chụp ảnh đĩa cơm văn phòng, tô bún bò hay món ăn tự nấu. Fitmate nhận diện kết cấu món ăn, bóc tách nguyên liệu và cho phép bạn tùy chỉnh khẩu phần trước khi ghi nhận vào ngân sách calo trong ngày.
+              </p>
+
+              <!-- 5 Steps List -->
+              <div class="space-y-3 pt-2">
+                <div class="flex items-start gap-3">
+                  <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                  <p class="text-xs text-on-surface"><strong class="font-bold">Chụp hoặc chọn ảnh:</strong> Chụp nhanh đĩa ăn tại quán hoặc chọn từ album ảnh.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                  <p class="text-xs text-on-surface"><strong class="font-bold">Hệ thống phân tích:</strong> Mô hình nhận diện đối chiếu với cơ sở dữ liệu ẩm thực Việt Nam.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+                  <p class="text-xs text-on-surface"><strong class="font-bold">Kiểm tra thành phần:</strong> Đọc lại các nguyên liệu bóc tách và tỉ lệ calo/protein dự kiến.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
+                  <p class="text-xs text-on-surface"><strong class="font-bold">Điều chỉnh khẩu phần:</strong> Chọn kích thước đĩa (0.5x, 1.0x, 1.5x) đúng với lượng bạn ăn.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold flex-shrink-0">5</span>
+                  <p class="text-xs text-on-surface"><strong class="font-bold">Xác nhận và ghi sổ:</strong> Bấm xác nhận để cập nhật tức thì vào chỉ số calo trong ngày.</p>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-surface-container-highest/60 text-on-surface-variant text-xs flex items-center gap-2 mt-2 border border-outline-variant/30">
+                <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+                <span>Ghi chú trung thực: Kết quả nhận diện là ước tính thông minh và luôn chờ xác nhận của bạn.</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 5. TẬP LUYỆN: INTERACTIVE WORKOUT SESSION -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface" id="workout-plan">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="text-center max-w-2xl mx-auto mb-16">
+            <span class="text-xs text-primary font-bold tracking-wider uppercase">Kiểm soát phòng tập</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight mt-1">
+              Mỗi hiệp tập đều được ghi nhận chuẩn xác
+            </h2>
+            <p class="text-base text-on-surface-variant mt-2">
+              Theo dõi số rep, mức tạ, đồng hồ bấm giờ nghỉ tự động và không bao giờ mất dữ liệu nếu bị gián đoạn giữa buổi.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
+            
+            <!-- Feature Highlights List -->
+            <div class="lg:col-span-6 flex flex-col gap-4">
+              <div class="p-5 rounded-2xl bg-surface-container-low/70 flex gap-4 items-start border border-outline-variant/30 hover:border-primary-container transition-all">
+                <div class="w-10 h-10 rounded-xl bg-primary-container text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <span class="material-symbols-outlined text-[22px]">video_library</span>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-on-surface">Thư viện bài tập chuẩn kỹ thuật</h3>
+                  <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Hướng dẫn tư thế chuẩn, lưu ý hít thở tránh chấn thương khớp, tìm kiếm nhanh theo nhóm cơ ngực, lưng, chân, vai.</p>
+                </div>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-surface-container-low/70 flex gap-4 items-start border border-outline-variant/30 hover:border-primary-container transition-all">
+                <div class="w-10 h-10 rounded-xl bg-primary-container text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <span class="material-symbols-outlined text-[22px]">tune</span>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-on-surface">Tùy biến hiệp và mức tạ tăng tiến</h3>
+                  <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Ghi nhận mức tạ lũy tiến (progressive overload) rõ ràng qua từng tuần để kiểm chứng độ phát triển cơ nạc.</p>
+                </div>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-surface-container-low/70 flex gap-4 items-start border border-outline-variant/30 hover:border-primary-container transition-all">
+                <div class="w-10 h-10 rounded-xl bg-primary-container text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <span class="material-symbols-outlined text-[22px]">restore</span>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-on-surface">Tự lưu & khôi phục phiên tập</h3>
+                  <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Dữ liệu được lưu sau mỗi hiệp hoàn thành. Ngay cả khi điện thoại tắt nguồn, buổi tập vẫn được giữ nguyên trạng thái.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Realtime Interactive Workout Screen -->
+            <div class="lg:col-span-6 flex justify-center">
+              <div class="w-full max-w-[420px] bg-inverse-surface text-inverse-on-surface rounded-[36px] p-6 shadow-2xl relative border border-white/10">
+                
+                <!-- Active workout session header -->
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-primary-container animate-ping"></span>
+                    <span class="px-3 py-1 rounded-full bg-primary/20 text-inverse-primary text-xs font-bold">Đang trong buổi tập</span>
+                  </div>
+                  <span id="workout-stopwatch" class="text-xs font-mono font-bold text-white tracking-widest bg-white/10 px-2.5 py-1 rounded-lg">24:18</span>
+                </div>
+
+                <!-- Exercise detail card -->
+                <div class="bg-surface-container-lowest/10 backdrop-blur-md rounded-2xl p-4 mb-4 border border-white/10">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-base font-bold text-white">Đẩy ngực tạ đòn (Bench Press)</span>
+                    <span class="text-xs text-inverse-primary font-bold">Bài 3/6</span>
+                  </div>
+                  <p class="text-[11px] text-inverse-on-surface/70 mb-3" id="active-set-summary">Hiệp 2/4 • Mục tiêu 10 lần • 60 kg</p>
+
+                  <!-- Rest Countdown Interactive Timer -->
+                  <div class="flex items-center justify-between bg-primary/20 p-3 rounded-xl border border-primary-container/30">
+                    <div class="flex items-center gap-2">
+                      <span id="rest-timer-icon" class="material-symbols-outlined text-inverse-primary text-[20px]">hourglass_top</span>
+                      <span class="text-xs text-white font-medium">Nghỉ giữa hiệp:</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span id="rest-timer-display" class="font-mono text-2xl font-black text-inverse-primary tracking-wider">00:42</span>
+                      <button onclick="toggleRestTimer()" id="rest-timer-btn" class="p-1 rounded-lg bg-inverse-primary/20 hover:bg-inverse-primary/30 text-inverse-primary transition-all" title="Bắt đầu/Tạm dừng">
+                        <span class="material-symbols-outlined text-[18px]" id="rest-timer-btn-icon">pause</span>
+                      </button>
+                      <button onclick="addRestTimer(15)" class="px-2 py-0.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold" title="+15 giây">
+                        +15s
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Exercise Progress Bar -->
+                  <div class="w-full h-1.5 bg-white/10 rounded-full mt-3 overflow-hidden">
+                    <div id="workout-progress-bar" class="h-full bg-primary-container rounded-full transition-all duration-300" style="width: 50%;"></div>
+                  </div>
+                </div>
+
+                <!-- Interactive Sets list -->
+                <p class="text-[11px] text-inverse-on-surface/60 mb-2 font-medium">Chạm vào hiệp để đổi trạng thái hoàn thành:</p>
+                <div class="space-y-2 mb-4 text-xs" id="workout-sets-list">
+                  <div onclick="toggleSetStatus(1)" class="cursor-pointer flex justify-between items-center p-2.5 rounded-xl bg-white/10 text-inverse-on-surface hover:bg-white/15 transition-all">
+                    <span>Hiệp 1: 50 kg × 12 reps</span>
+                    <span id="set-badge-1" class="text-inverse-primary font-bold flex items-center gap-1">✓ Hoàn thành</span>
+                  </div>
+                  <div onclick="toggleSetStatus(2)" class="cursor-pointer flex justify-between items-center p-2.5 rounded-xl bg-primary-container/20 text-white font-semibold border border-primary-container/40">
+                    <span id="set-desc-2">Hiệp 2: 60 kg × 10 reps</span>
+                    <span id="set-badge-2" class="text-inverse-primary font-bold flex items-center gap-1">⏳ Đang nghỉ</span>
+                  </div>
+                  <div onclick="toggleSetStatus(3)" class="cursor-pointer flex justify-between items-center p-2.5 rounded-xl bg-white/5 text-inverse-on-surface/70 hover:bg-white/10 transition-all">
+                    <span>Hiệp 3: 60 kg × 10 reps</span>
+                    <span id="set-badge-3" class="text-white/40 flex items-center gap-1">▶ Chờ tập</span>
+                  </div>
+                  <div onclick="toggleSetStatus(4)" class="cursor-pointer flex justify-between items-center p-2.5 rounded-xl bg-white/5 text-inverse-on-surface/70 hover:bg-white/10 transition-all">
+                    <span>Hiệp 4: 65 kg × 8 reps</span>
+                    <span id="set-badge-4" class="text-white/40 flex items-center gap-1">▶ Chờ tập</span>
+                  </div>
+                </div>
+
+                <!-- Weight and Rep Quick Tuning -->
+                <div class="flex items-center justify-between p-2.5 bg-white/5 rounded-xl text-xs mb-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-white/70">Mức tạ:</span>
+                    <button onclick="adjustWeight(-2.5)" class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold">-2.5</button>
+                    <span id="tuning-weight-display" class="font-bold text-white">60 kg</span>
+                    <button onclick="adjustWeight(2.5)" class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold">+2.5</button>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-white/70">Reps:</span>
+                    <button onclick="adjustReps(-1)" class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold">-1</button>
+                    <span id="tuning-reps-display" class="font-bold text-white">10</span>
+                    <button onclick="adjustReps(1)" class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold">+1</button>
+                  </div>
+                </div>
+
+                <!-- Interrupted Session Notice Badge -->
+                <div class="flex items-center justify-between p-3 bg-secondary/30 rounded-xl text-secondary-fixed mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">cloud_done</span>
+                    <span class="text-[11px]">Tiến trình được đồng bộ an toàn theo thời gian thực.</span>
+                  </div>
+                </div>
+
+                <!-- Finish Workout Action -->
+                <button onclick="finishWorkoutSession()" class="w-full py-2.5 bg-gradient-to-r from-primary-container to-primary hover:opacity-90 text-white font-bold rounded-xl text-xs shadow-md transition-all">
+                  Hoàn thành buổi tập hôm nay
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 6. HUẤN LUYỆN VIÊN CÁ NHÂN (PT) -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface-container-low/40 border-t border-outline-variant/30" id="coaches">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="max-w-2xl mx-auto text-center mb-12">
+            <span class="text-xs text-primary font-bold tracking-wider uppercase">Huấn luyện viên cá nhân</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight mt-1">
+              Tìm PT phù hợp và đặt lịch minh bạch
+            </h2>
+            <p class="text-base text-on-surface-variant mt-2">
+              Xem hồ sơ chứng chỉ được kiểm duyệt, lựa chọn khung giờ trống và đặt lịch tập chỉ trong 4 bước đơn giản.
+            </p>
+          </div>
+
+          <!-- 5-Step Visual Timeline -->
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative mb-12">
+            <div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm border border-outline-variant/30 flex flex-col gap-2">
+              <div class="w-7 h-7 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs">1</div>
+              <h4 class="font-bold text-on-surface text-sm">Khám phá PT</h4>
+              <p class="text-xs text-on-surface-variant">Duyệt danh sách theo mục tiêu: tăng cơ, giảm mỡ, yoga, calisthenics.</p>
+            </div>
+            <div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm border border-outline-variant/30 flex flex-col gap-2">
+              <div class="w-7 h-7 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs">2</div>
+              <h4 class="font-bold text-on-surface text-sm">Xem hồ sơ & bằng cấp</h4>
+              <p class="text-xs text-on-surface-variant">Đọc chi tiết bằng NASM/ACE, số buổi đã dạy và đánh giá học viên.</p>
+            </div>
+            <div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm border border-outline-variant/30 flex flex-col gap-2">
+              <div class="w-7 h-7 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs">3</div>
+              <h4 class="font-bold text-on-surface text-sm">Chọn khung giờ trống</h4>
+              <p class="text-xs text-on-surface-variant">Chọn ca tập sáng, chiều hoặc tối theo biểu phí niêm yết rõ ràng.</p>
+            </div>
+            <div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm border border-outline-variant/30 flex flex-col gap-2">
+              <div class="w-7 h-7 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs">4</div>
+              <h4 class="font-bold text-on-surface text-sm">Xác nhận đặt lịch</h4>
+              <p class="text-xs text-on-surface-variant">Nhận lịch hẹn ngay tức thì và theo dõi trạng thái minh bạch.</p>
+            </div>
+            <div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm border border-outline-variant/30 flex flex-col gap-2">
+              <div class="w-7 h-7 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs">5</div>
+              <h4 class="font-bold text-on-surface text-sm">Bắt đầu buổi tập</h4>
+              <p class="text-xs text-on-surface-variant">Check-in mã QR tại phòng tập; đánh giá và phản hồi chất lượng.</p>
+            </div>
+          </div>
+
+          <!-- PT Directory Showcase -->
+          <div class="bg-surface-container-lowest p-6 rounded-[32px] shadow-sm border border-outline-variant/30 mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 class="text-lg font-bold text-on-surface">Danh sách huấn luyện viên nổi bật</h3>
+                <p class="text-xs text-on-surface-variant">100% PT đã nộp chứng chỉ và xác thực danh tính bởi ban chuyên môn Fitmate</p>
+              </div>
+
+              <!-- Filter Pills -->
+              <div class="flex flex-wrap gap-2" id="pt-filter-pills">
+                <button onclick="filterPT('all')" class="pt-filter active px-3.5 py-1 rounded-full text-xs font-bold bg-primary text-white transition-all">Tất cả</button>
+                <button onclick="filterPT('hypertrophy')" class="pt-filter px-3.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface transition-all">Tăng cơ</button>
+                <button onclick="filterPT('weight-loss')" class="pt-filter px-3.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface transition-all">Giảm mỡ</button>
+                <button onclick="filterPT('female')" class="pt-filter px-3.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface transition-all">HLV Nữ</button>
+                <button onclick="filterPT('calisthenics')" class="pt-filter px-3.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface transition-all">Calisthenics</button>
+              </div>
+            </div>
+
+            <!-- Coaches Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="coaches-grid">
+              
+              <!-- Coach 1 -->
+              <div class="pt-card hypertrophy bg-surface-container-low/70 p-5 rounded-2xl border border-outline-variant/30 flex flex-col justify-between hover:border-primary-container transition-all" data-specialty="hypertrophy">
+                <div>
+                  <div class="flex items-center gap-3 mb-3">
+                    <div class="w-12 h-12 rounded-full overflow-hidden bg-primary/20 flex-shrink-0">
+                      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" alt="HLV Hoàng Nam" class="w-full h-full object-cover"/>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <h4 class="font-bold text-on-surface text-sm">Nguyễn Hoàng Nam</h4>
+                        <span class="material-symbols-outlined text-primary text-[16px]" title="Đã xác thực chứng chỉ">verified</span>
+                      </div>
+                      <p class="text-[11px] text-on-surface-variant">Chứng chỉ NASM CPT • 6 năm KN</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-bold">★ 4.9 (148 đánh giá)</span>
+                    <span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary text-[10px] font-bold">Tăng cơ & Giảm mỡ</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mb-4 leading-relaxed">
+                    Chuyên gia thể hình tăng cơ nạc tự nhiên, xây dựng giáo án lũy tiến tạ an toàn cho dân văn phòng và người mới bắt đầu.
+                  </p>
+                </div>
+                <div class="pt-3 border-t border-surface-container flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] text-on-surface-variant block">Học phí:</span>
+                    <span class="font-bold text-primary text-sm">350.000đ <span class="text-[10px] font-normal text-on-surface-variant">/ buổi</span></span>
+                  </div>
+                  <button onclick="openBookingModal('Nguyễn Hoàng Nam', '350.000đ', 'NASM CPT')" class="px-4 py-1.5 bg-primary-container hover:bg-primary text-white rounded-full text-xs font-bold transition-all shadow-sm">
+                    Đặt lịch tập
+                  </button>
+                </div>
+              </div>
+
+              <!-- Coach 2 -->
+              <div class="pt-card weight-loss female bg-surface-container-low/70 p-5 rounded-2xl border border-outline-variant/30 flex flex-col justify-between hover:border-primary-container transition-all" data-specialty="weight-loss female">
+                <div>
+                  <div class="flex items-center gap-3 mb-3">
+                    <div class="w-12 h-12 rounded-full overflow-hidden bg-primary/20 flex-shrink-0">
+                      <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="HLV Thùy Linh" class="w-full h-full object-cover"/>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <h4 class="font-bold text-on-surface text-sm">Trần Thùy Linh</h4>
+                        <span class="material-symbols-outlined text-primary text-[16px]" title="Đã xác thực chứng chỉ">verified</span>
+                      </div>
+                      <p class="text-[11px] text-on-surface-variant">Chứng chỉ ACE Fitness • 5 năm KN</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-bold">★ 5.0 (210 đánh giá)</span>
+                    <span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary text-[10px] font-bold">Giảm mỡ Nữ & Dinh dưỡng</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mb-4 leading-relaxed">
+                    Đồng hành cùng học viên nữ siết eo, cải thiện tư thế gù lưng và lên thực đơn ăn sạch bền vững không kiêng khem tiêu cực.
+                  </p>
+                </div>
+                <div class="pt-3 border-t border-surface-container flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] text-on-surface-variant block">Học phí:</span>
+                    <span class="font-bold text-primary text-sm">380.000đ <span class="text-[10px] font-normal text-on-surface-variant">/ buổi</span></span>
+                  </div>
+                  <button onclick="openBookingModal('Trần Thùy Linh', '380.000đ', 'ACE Fitness')" class="px-4 py-1.5 bg-primary-container hover:bg-primary text-white rounded-full text-xs font-bold transition-all shadow-sm">
+                    Đặt lịch tập
+                  </button>
+                </div>
+              </div>
+
+              <!-- Coach 3 -->
+              <div class="pt-card calisthenics bg-surface-container-low/70 p-5 rounded-2xl border border-outline-variant/30 flex flex-col justify-between hover:border-primary-container transition-all" data-specialty="calisthenics">
+                <div>
+                  <div class="flex items-center gap-3 mb-3">
+                    <div class="w-12 h-12 rounded-full overflow-hidden bg-primary/20 flex-shrink-0">
+                      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt="HLV Quốc Anh" class="w-full h-full object-cover"/>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <h4 class="font-bold text-on-surface text-sm">Lê Quốc Anh</h4>
+                        <span class="material-symbols-outlined text-primary text-[16px]" title="Đã xác thực chứng chỉ">verified</span>
+                      </div>
+                      <p class="text-[11px] text-on-surface-variant">Cử nhân TDTT • 4 năm KN</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-bold">★ 4.8 (96 đánh giá)</span>
+                    <span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary text-[10px] font-bold">Calisthenics & Cơ khớp</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mb-4 leading-relaxed">
+                    Huấn luyện sức mạnh trọng lượng cơ thể (Pull-up, Dips, Handstand), phục hồi sự linh hoạt và dẻo dai của cột sống.
+                  </p>
+                </div>
+                <div class="pt-3 border-t border-surface-container flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] text-on-surface-variant block">Học phí:</span>
+                    <span class="font-bold text-primary text-sm">320.000đ <span class="text-[10px] font-normal text-on-surface-variant">/ buổi</span></span>
+                  </div>
+                  <button onclick="openBookingModal('Lê Quốc Anh', '320.000đ', 'Cử nhân TDTT')" class="px-4 py-1.5 bg-primary-container hover:bg-primary text-white rounded-full text-xs font-bold transition-all shadow-sm">
+                    Đặt lịch tập
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Policy Transparent Card -->
+          <div class="p-6 rounded-[28px] bg-surface-container-lowest border border-outline-variant/40 shadow-sm">
+            <h3 class="text-base font-bold text-on-surface mb-3 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">policy</span>
+              <span>Chính sách minh bạch và bảo vệ quyền lợi hội viên</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-on-surface-variant text-xs leading-relaxed">
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">event_busy</span>
+                <span><strong>Chính sách hủy hẹn:</strong> Hội viên được hủy trước giờ tập ít nhất 24 giờ mà không phát sinh bất kỳ khoản phí phạt nào.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">receipt_long</span>
+                <span><strong>Minh bạch trạng thái:</strong> Trạng thái đặt lịch và thanh toán được ghi nhận độc lập, rõ ràng trên hệ thống.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-outline text-[20px] mt-0.5">security_update_good</span>
+                <span><strong>Xác thực giao dịch:</strong> Chỉ hoàn tất buổi tập sau khi học viên quét mã QR check-in tại phòng tập.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 7. CỘNG ĐỒNG VÀ KẾT NỐI -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface" id="community">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
+            
+            <!-- Community Info -->
+            <div class="lg:col-span-5 flex flex-col gap-4">
+              <span class="text-xs text-primary font-bold tracking-wider uppercase">Cộng đồng Fitmate</span>
+              <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">
+                Không chỉ theo dõi tiến độ — Hãy chia sẻ hành trình
+              </h2>
+              <p class="text-base text-on-surface-variant leading-relaxed">
+                Kết nối với những người bạn có cùng mục tiêu rèn luyện thể thao, chia sẻ bí quyết nấu ăn sạch và truyền động lực trong môi trường lành mạnh, văn minh.
+              </p>
+              <div class="space-y-3 pt-2">
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary text-[20px]">collections</span>
+                  <span class="text-xs text-on-surface">Chia sẻ album ảnh hành trình chuyển biến hình thể</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary text-[20px]">tag</span>
+                  <span class="text-xs text-on-surface">Theo dõi chủ đề bằng hashtag #TienBoMoiNgay, #GiamMo</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary text-[20px]">chat</span>
+                  <span class="text-xs text-on-surface">Thảo luận mẹo dinh dưỡng và kỹ thuật bài tập</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary text-[20px]">shield</span>
+                  <span class="text-xs text-on-surface">Quyền kiểm soát: Dễ dàng chặn nội dung hoặc báo cáo vi phạm</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Community Feed Card -->
+            <div class="lg:col-span-7 flex justify-center">
+              <div class="w-full max-w-[460px] bg-surface-container-lowest rounded-[32px] p-5 shadow-xl border border-outline-variant/30 flex flex-col gap-4">
+                
+                <!-- Author Row -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-full overflow-hidden bg-surface-container">
+                      <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Minh Tuấn" class="w-full h-full object-cover"/>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-on-surface text-sm">Minh Tuấn</h4>
+                      <p class="text-[11px] text-on-surface-variant">Tập Calisthenics • 2 giờ trước</p>
+                    </div>
+                  </div>
+                  <button onclick="showToast('Tùy chọn: Bạn có thể lưu hoặc báo cáo bài viết')" class="p-1 rounded-full hover:bg-surface-container text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                  </button>
+                </div>
+
+                <!-- Post Text -->
+                <p class="text-xs text-on-surface leading-relaxed">
+                  Sau 3 tháng kiên trì theo dõi calo trên Fitmate, hôm nay mình đã kéo xà được 12 cái liên tiếp và giảm được 4kg mỡ thừa! Cảm ơn anh em nhóm calis đã hỗ trợ mỗi ngày 💪
+                </p>
+
+                <!-- Hashtags -->
+                <div class="flex flex-wrap gap-2 text-xs font-bold text-primary">
+                  <span class="cursor-pointer hover:underline">#TienBoMoiNgay</span>
+                  <span class="cursor-pointer hover:underline">#FitmateVN</span>
+                  <span class="cursor-pointer hover:underline">#Calisthenics</span>
+                </div>
+
+                <!-- 3-Image Carousel -->
+                <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-surface-container">
+                  <img id="carousel-post-img" class="w-full h-full object-cover transition-all duration-300" src="https://images.unsplash.com/photo-1598971861713-54ad16a7e72e?auto=format&fit=crop&w=800&q=80" alt="Minh Tuan pullup"/>
+                  
+                  <!-- Carousel Counter Badge -->
+                  <span id="carousel-counter-badge" class="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-black/60 text-white text-[11px] font-bold">1/3</span>
+
+                  <!-- Carousel Navigation Arrows -->
+                  <button onclick="prevPostPhoto()" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                  </button>
+                  <button onclick="nextPostPhoto()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                  </button>
+
+                  <!-- Dots indicator -->
+                  <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5" id="carousel-dots">
+                    <span class="dot-item w-4 h-1.5 rounded-full bg-primary-container"></span>
+                    <span class="dot-item w-1.5 h-1.5 rounded-full bg-white/60"></span>
+                    <span class="dot-item w-1.5 h-1.5 rounded-full bg-white/60"></span>
+                  </div>
+                </div>
+
+                <!-- Actions Row -->
+                <div class="flex items-center justify-between pt-1 border-t border-surface-container text-xs text-on-surface-variant">
+                  <div class="flex items-center gap-4">
+                    <button onclick="togglePostLike()" id="post-like-btn" class="flex items-center gap-1.5 text-on-surface-variant hover:text-red-500 transition-colors">
+                      <span class="material-symbols-outlined text-[20px]" id="post-like-icon">favorite_border</span>
+                      <span id="post-like-count" class="font-bold">34</span>
+                    </button>
+                    <button onclick="toggleCommentsDrawer()" class="flex items-center gap-1.5 hover:text-primary transition-colors">
+                      <span class="material-symbols-outlined text-[20px]">chat_bubble_outline</span>
+                      <span id="post-comment-count" class="font-bold">3</span>
+                    </button>
+                    <button onclick="openShareModal()" class="flex items-center gap-1.5 hover:text-on-surface transition-colors" title="Chia sẻ">
+                      <span class="material-symbols-outlined text-[20px]">share</span>
+                    </button>
+                  </div>
+                  <button onclick="togglePostBookmark()" id="post-bookmark-btn" class="hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-[20px]" id="post-bookmark-icon">bookmark_border</span>
+                  </button>
+                </div>
+
+                <!-- Interactive Comment Drawer Section -->
+                <div id="comment-drawer" class="hidden pt-2 border-t border-surface-container flex flex-col gap-2.5">
+                  <div class="space-y-2 text-xs" id="comments-list">
+                    <div class="p-2 rounded-xl bg-surface-container-low">
+                      <span class="font-bold text-on-surface">Hoàng Long:</span>
+                      <span class="text-on-surface-variant"> Form kéo xà chuẩn quá bạn ơi! Có khóa khớp cổ tay không?</span>
+                    </div>
+                    <div class="p-2 rounded-xl bg-surface-container-low">
+                      <span class="font-bold text-on-surface">Mai Phương:</span>
+                      <span class="text-on-surface-variant"> Quá đỉnh, mình cũng đang theo giáo án calo của Fitmate tuần thứ 2.</span>
+                    </div>
+                    <div class="p-2 rounded-xl bg-surface-container-low">
+                      <span class="font-bold text-on-surface">Coach Nam:</span>
+                      <span class="text-on-surface-variant"> Chúc mừng em, tuần sau bắt đầu thêm tạ treo 5kg vào thử nhé!</span>
+                    </div>
+                  </div>
+
+                  <!-- New comment input -->
+                  <div class="flex items-center gap-2 pt-1">
+                    <input id="new-comment-input" type="text" placeholder="Viết bình luận động viên..." class="flex-1 bg-surface-container-low px-3 py-2 rounded-xl text-xs text-on-surface border border-outline-variant/30 focus:outline-none focus:border-primary-container"/>
+                    <button onclick="submitNewComment()" class="px-3 py-2 bg-primary-container hover:bg-primary text-white rounded-xl text-xs font-bold transition-all">Gửi</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 8. TRỢ LÝ FITMATE AI (DARK THEME ACCENT) -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-inverse-surface text-inverse-on-surface relative overflow-hidden" id="fitmate-ai">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop relative z-10">
+          <div class="max-w-2xl mx-auto text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-inverse-primary text-xs font-semibold mb-2">
+              <span class="material-symbols-outlined text-[16px]">neurology</span> Trợ lý thể hình & dinh dưỡng tiếng Việt
+            </div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+              Trợ lý Fitmate AI, luôn sẵn sàng giải đáp
+            </h2>
+            <p class="text-sm md:text-base text-surface-variant/80 mt-2">
+              Giải đáp thắc mắc về kỹ thuật động tác, cách chia macro và thực đơn ăn sạch phù hợp với thực phẩm và thói quen người Việt.
+            </p>
+          </div>
+
+          <!-- Chat UI Bento -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Conversation History Sidebar -->
+            <div class="lg:col-span-4 bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10 flex flex-col gap-3">
+              <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                <span class="text-xs font-bold text-white">Lịch sử hội thoại</span>
+                <button onclick="startNewAIChat()" class="text-[11px] text-inverse-primary hover:underline font-semibold" type="button">+ Cuộc trò chuyện mới</button>
+              </div>
+              <div class="space-y-1.5" id="chat-threads-list">
+                <div onclick="switchAIChatThread(0)" class="chat-thread active p-2.5 rounded-xl bg-white/15 flex items-center justify-between text-xs font-medium text-white cursor-pointer hover:bg-white/20 transition-all">
+                  <span class="truncate">Bữa phụ trước tập ngực 1 tiếng</span>
+                  <span class="material-symbols-outlined text-[16px] text-inverse-primary">chat</span>
+                </div>
+                <div onclick="switchAIChatThread(1)" class="chat-thread p-2.5 rounded-xl bg-white/5 flex items-center justify-between text-xs text-surface-variant/80 cursor-pointer hover:bg-white/10 transition-all">
+                  <span class="truncate">Gợi ý bài tập lưng xô tại nhà</span>
+                  <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                </div>
+                <div onclick="switchAIChatThread(2)" class="chat-thread p-2.5 rounded-xl bg-white/5 flex items-center justify-between text-xs text-surface-variant/80 cursor-pointer hover:bg-white/10 transition-all">
+                  <span class="truncate">Lượng protein trong 1 quả trứng gà</span>
+                  <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                </div>
+              </div>
+
+              <!-- Quick Prompt Recommendation Chips -->
+              <div class="pt-3 border-t border-white/10">
+                <p class="text-[10px] text-surface-variant/60 uppercase font-bold mb-2">Gợi ý câu hỏi nhanh:</p>
+                <div class="flex flex-col gap-1.5">
+                  <button onclick="askAIPrompt('Gợi ý bữa phụ trước buổi tập ngực 1 tiếng nhẹ bụng?')" class="text-left text-[11px] text-white/80 hover:text-inverse-primary bg-white/5 hover:bg-white/10 p-2 rounded-lg transition-all truncate">
+                    👉 Bữa phụ trước tập ngực nhẹ bụng?
+                  </button>
+                  <button onclick="askAIPrompt('Cách tính TDEE chuẩn để giảm 3kg mỡ thừa trong 1 tháng?')" class="text-left text-[11px] text-white/80 hover:text-inverse-primary bg-white/5 hover:bg-white/10 p-2 rounded-lg transition-all truncate">
+                    👉 Cách tính TDEE giảm 3kg mỡ thừa?
+                  </button>
+                  <button onclick="askAIPrompt('Thực đơn tăng cơ 2000 kcal tiết kiệm cho sinh viên?')" class="text-left text-[11px] text-white/80 hover:text-inverse-primary bg-white/5 hover:bg-white/10 p-2 rounded-lg transition-all truncate">
+                    👉 Thực đơn tăng cơ tiết kiệm cho sinh viên?
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat Stream Window -->
+            <div class="lg:col-span-8 bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 flex flex-col gap-4">
+              
+              <!-- Chat Messages Container -->
+              <div class="space-y-4 max-h-[420px] overflow-y-auto pr-2" id="chat-messages-container">
+                
+                <!-- User Question -->
+                <div class="flex justify-end">
+                  <div class="bg-primary px-4 py-3 rounded-2xl rounded-tr-none max-w-[85%] text-white text-xs leading-relaxed shadow-sm">
+                    Gợi ý bữa phụ trước buổi tập ngực 1 tiếng nhẹ bụng?
+                  </div>
+                </div>
+
+                <!-- AI Response -->
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-full bg-inverse-primary text-on-primary-fixed flex items-center justify-center font-bold text-xs flex-shrink-0">
+                    AI
+                  </div>
+                  <div class="bg-white/10 p-4 rounded-2xl rounded-tl-none text-xs text-surface-variant leading-relaxed flex-1 border border-white/5">
+                    <p class="font-bold text-white mb-2">Chào bạn! Trước tập ngực 60 phút bạn nên nạp carb hấp thu nhanh kết hợp vừa phải protein để dạ dày êm ái:</p>
+                    <ul class="list-disc pl-5 space-y-1.5 text-white/90">
+                      <li><strong class="text-white">1 quả chuối chín vừa (~100 kcal):</strong> Bổ sung glucose tự nhiên và kali giúp cơ ngực pump tạ khỏe, chống chuột rút.</li>
+                      <li><strong class="text-white">1 hộp sữa chua không đường hoặc nửa muỗng Whey:</strong> Bổ sung nhẹ 10-15g protein mà không gây trào ngược khi nằm ghế Bench Press.</li>
+                      <li><strong class="text-white">250ml nước lọc:</strong> Giữ cơ bắp đủ nước và trao đổi chất linh hoạt.</li>
+                    </ul>
+                    <p class="mt-2 text-[11px] text-surface-variant/70 italic">💡 Lưu ý: Tránh đồ chiên rán, mỡ hoặc rau củ quá nhiều chất xơ sát giờ tập nhé!</p>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- AI Status Typing Indicator -->
+              <div id="ai-typing-indicator" class="hidden flex items-center gap-2 text-xs text-surface-variant/60 pl-2">
+                <span class="w-2 h-2 rounded-full bg-inverse-primary animate-ping"></span>
+                <span class="text-[11px] text-inverse-primary">Fitmate AI đang tổng hợp từ cơ sở dữ liệu dinh dưỡng...</span>
+              </div>
+
+              <!-- Chat Input Box -->
+              <div class="flex items-center gap-2 pt-2 border-t border-white/10">
+                <input id="ai-chat-input" type="text" placeholder="Hỏi Fitmate AI về dinh dưỡng, bài tập, macro..." class="flex-1 bg-white/10 px-4 py-3 rounded-full text-xs text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-inverse-primary border border-white/10" onkeydown="handleAIChatKey(event)"/>
+                <button onclick="sendAIChatMessage()" class="px-5 py-3 rounded-full bg-inverse-primary hover:opacity-90 text-on-primary-fixed font-bold text-xs flex items-center gap-1 transition-all">
+                  <span>Gửi</span>
+                  <span class="material-symbols-outlined text-[16px]">send</span>
+                </button>
+              </div>
+
+              <!-- Legal / Medical Disclaimer -->
+              <div class="p-3 rounded-xl bg-secondary/20 border border-secondary-container/30 flex items-start gap-2">
+                <span class="material-symbols-outlined text-secondary-fixed text-[18px] flex-shrink-0">warning</span>
+                <p class="text-[11px] text-secondary-fixed leading-tight">
+                  Lưu ý quan trọng: Fitmate AI không chẩn đoán bệnh tật và không thay thế bác sĩ hoặc huấn luyện viên y khoa. Mọi đề xuất chỉ mang tính tham khảo để bạn chủ động cân nhắc.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 9. QUYỀN RIÊNG TƯ VÀ KIỂM SOÁT DỮ LIỆU -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="max-w-2xl mx-auto text-center mb-12">
+            <div class="w-12 h-12 rounded-full bg-primary-container/15 text-primary flex items-center justify-center mx-auto mb-2">
+              <span class="material-symbols-outlined text-[28px]">verified_user</span>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">
+              Dữ liệu của bạn, toàn quyền kiểm soát của bạn
+            </h2>
+            <p class="text-base text-on-surface-variant mt-2">
+              Fitmate xây dựng trên nền tảng minh bạch. Bạn có toàn quyền trích xuất, vô hiệu hóa hoặc xóa thông tin bất cứ lúc nào.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-surface-container-low p-6 rounded-2xl flex flex-col gap-2 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-[24px]">perm_camera_mic</span>
+              <h3 class="font-bold text-on-surface text-base">Quyền thiết bị linh hoạt</h3>
+              <p class="text-xs text-on-surface-variant">Chủ động cấp hoặc thu hồi quyền truy cập camera và thông báo đẩy trong phần Cài đặt.</p>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-2xl flex flex-col gap-2 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-[24px]">manage_accounts</span>
+              <h3 class="font-bold text-on-surface text-base">Hồ sơ cá nhân & Ẩn danh</h3>
+              <p class="text-xs text-on-surface-variant">Tự do cập nhật thông tin hiển thị hoặc chuyển tài khoản về trạng thái riêng tư với cộng đồng.</p>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-2xl flex flex-col gap-2 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-[24px]">download</span>
+              <h3 class="font-bold text-on-surface text-base">Xuất dữ liệu cá nhân</h3>
+              <p class="text-xs text-on-surface-variant">Tải toàn bộ lịch sử tập luyện, nhật ký calo và số đo cơ thể dưới dạng tệp mở bất kỳ lúc nào.</p>
+              <button onclick="exportUserDataDemo()" class="text-left text-xs text-primary font-bold hover:underline pt-1">
+                Tải bản sao dữ liệu mẫu (JSON) →
+              </button>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-2xl flex flex-col gap-2 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-[24px]">delete_forever</span>
+              <h3 class="font-bold text-on-surface text-base">Quyền xóa tài khoản vĩnh viễn</h3>
+              <p class="text-xs text-on-surface-variant">Gửi yêu cầu xóa tài khoản vĩnh viễn với thời gian ân hạn 30 ngày an toàn.</p>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-2xl flex flex-col gap-2 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-[24px]">block</span>
+              <h3 class="font-bold text-on-surface text-base">Quản lý chặn người dùng</h3>
+              <p class="text-xs text-on-surface-variant">Danh sách người dùng bị chặn được quản trị trực quan. Bạn quyết định ai được tương tác.</p>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-2xl flex flex-col gap-2 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-[24px]">lock</span>
+              <h3 class="font-bold text-on-surface text-base">Mã hóa an toàn</h3>
+              <p class="text-xs text-on-surface-variant">Toàn bộ dữ liệu trao đổi giữa ứng dụng và máy chủ đều được mã hóa theo tiêu chuẩn hiện đại.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 10. GÓI DỊCH VỤ (PRICING) -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface-container-low/50 border-t border-outline-variant/30" id="pricing">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="max-w-2xl mx-auto text-center mb-10">
+            <span class="text-xs text-primary font-bold tracking-wider uppercase">Minh bạch chi phí</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight mt-1">
+              Lựa chọn gói đồng hành phù hợp
+            </h2>
+            <p class="text-base text-on-surface-variant mt-2">
+              Bắt đầu hoàn toàn miễn phí và nâng cấp khi bạn có nhu cầu phân tích chuyên sâu hoặc tập cùng huấn luyện viên.
+            </p>
+
+            <!-- Billing Cycle Switcher -->
+            <div class="mt-6 inline-flex items-center bg-surface-container p-1 rounded-full border border-outline-variant/40">
+              <button onclick="setBillingCycle('monthly')" id="billing-monthly-btn" class="px-4 py-1.5 rounded-full text-xs font-bold bg-surface-container-lowest text-primary shadow-sm transition-all" type="button">
+                Theo tháng
+              </button>
+              <button onclick="setBillingCycle('annual')" id="billing-annual-btn" class="px-4 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5" type="button">
+                <span>Theo năm</span>
+                <span class="px-2 py-0.5 rounded-full bg-primary-container text-white text-[10px] font-bold">Tiết kiệm 20%</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            
+            <!-- Tier 1: Miễn phí -->
+            <div class="bg-surface-container-lowest p-6 rounded-[32px] shadow-sm flex flex-col justify-between border border-outline-variant/30">
+              <div>
+                <span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Gói Cơ Bản</span>
+                <div class="mt-3 mb-5">
+                  <span class="text-3xl font-black text-on-surface">Miễn phí</span>
+                  <p class="text-xs text-on-surface-variant mt-1">Dành cho cá nhân tự rèn luyện thói quen</p>
+                </div>
+                <ul class="space-y-3 text-xs text-on-surface-variant mb-6">
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Theo dõi calo & quét món ăn cơ bản</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Thư viện bài tập tiếng Việt</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Cộng đồng và nhật ký cá nhân</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Hạn mức hỏi đáp Fitmate AI mỗi ngày</span>
+                  </li>
+                </ul>
+              </div>
+              <button onclick="openEarlyAccessModal()" class="w-full py-3 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-bold text-xs transition-all" type="button">
+                Bắt đầu miễn phí
+              </button>
+            </div>
+
+            <!-- Tier 2: Nâng cao (Phổ biến) -->
+            <div class="bg-surface-container-lowest p-6 rounded-[32px] shadow-xl flex flex-col justify-between border-2 border-primary-container relative">
+              <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-primary-container text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
+                Phổ biến nhất
+              </div>
+              <div>
+                <span class="text-xs font-bold text-primary uppercase tracking-wider">Gói Nâng Cao (Pro)</span>
+                <div class="mt-3 mb-5">
+                  <span id="tier-pro-price" class="text-3xl font-black text-on-surface">119.000đ</span>
+                  <span id="tier-pro-period" class="text-xs text-on-surface-variant">/ tháng</span>
+                  <p class="text-xs text-on-surface-variant mt-1">Mở rộng công cụ chuyên sâu & AI không giới hạn</p>
+                </div>
+                <ul class="space-y-3 text-xs text-on-surface mb-6">
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Toàn bộ tính năng gói Cơ bản</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Hạn mức Fitmate AI chuyên sâu không giới hạn</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Biểu đồ phân tích độ dày cơ nạc & mỡ thừa</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Tự động gợi ý thực đơn tuần theo macro mục tiêu</span>
+                  </li>
+                </ul>
+              </div>
+              <button onclick="openEarlyAccessModal()" class="w-full py-3 rounded-full bg-gradient-to-r from-primary-container to-primary hover:opacity-90 text-white font-bold text-xs shadow-md transition-all" type="button">
+                Đăng ký trải nghiệm sớm
+              </button>
+            </div>
+
+            <!-- Tier 3: Huấn Luyện Viên -->
+            <div class="bg-surface-container-lowest p-6 rounded-[32px] shadow-sm flex flex-col justify-between border border-outline-variant/30">
+              <div>
+                <span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Đồng hành cùng PT</span>
+                <div class="mt-3 mb-5">
+                  <span class="text-2xl font-black text-on-surface">Theo dịch vụ PT</span>
+                  <p class="text-xs text-on-surface-variant mt-1">Chi phí minh bạch do từng huấn luyện viên niêm yết</p>
+                </div>
+                <ul class="space-y-3 text-xs text-on-surface-variant mb-6">
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Đặt lịch trực tiếp với PT đã xác thực bằng cấp</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Giáo án 1 kèm 1 theo thể trạng riêng</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Nhắn tin trao đổi nhật ký ăn uống trực tiếp cùng PT</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                    <span>Chính sách hủy hẹn hoàn tiền rõ ràng</span>
+                  </li>
+                </ul>
+              </div>
+              <a href="#coaches" class="w-full py-3 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-bold text-xs transition-all text-center block">
+                Khám phá danh sách PT
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 11. PERSONAS THỰC TẾ -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="max-w-2xl mx-auto text-center mb-12">
+            <span class="text-xs text-primary font-bold tracking-wider uppercase">Thấu hiểu người dùng</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight mt-1">
+              Thiết kế cho từng hành trình xuất phát điểm riêng
+            </h2>
+            <p class="text-base text-on-surface-variant mt-2">
+              Dù bạn mới bắt đầu, bận rộn công việc hay tập luyện cùng huấn luyện viên, Fitmate đều giải quyết đúng bài toán của bạn.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Persona 1 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[28px] shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold text-xl mb-4">
+                  🌱
+                </div>
+                <span class="text-xs text-primary font-bold uppercase">Nhóm 01</span>
+                <h3 class="text-base font-bold text-on-surface mt-1 mb-2">Người mới bắt đầu</h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                  Cần thư viện bài tập video tiếng Việt rõ ràng, giải thích cách thở và động tác tránh đau lưng. Kế hoạch tập tinh gọn 3 buổi/tuần để xây dựng thói quen.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-surface-container text-xs">
+                <span class="font-bold text-on-surface">Tính năng cốt lõi:</span>
+                <p class="text-on-surface-variant mt-0.5">Thư viện động tác • Đếm rep & Chuỗi ngày Streak</p>
+              </div>
+            </div>
+
+            <!-- Persona 2 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[28px] shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-secondary-container/20 text-secondary flex items-center justify-center font-bold text-xl mb-4">
+                  ⏱️
+                </div>
+                <span class="text-xs text-secondary font-bold uppercase">Nhóm 02</span>
+                <h3 class="text-base font-bold text-on-surface mt-1 mb-2">Người bận rộn</h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                  Cần ghi nhận calo nhanh qua camera để không tốn thời gian gõ tay từng món. Bộ đếm thời gian hiệp tập tối ưu và hệ thống tự động lưu khi có cuộc gọi khẩn cấp.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-surface-container text-xs">
+                <span class="font-bold text-on-surface">Tính năng cốt lõi:</span>
+                <p class="text-on-surface-variant mt-0.5">Quét món ăn AI • Tự khôi phục buổi tập dở dang</p>
+              </div>
+            </div>
+
+            <!-- Persona 3 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[28px] shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-primary-container/20 text-primary flex items-center justify-center font-bold text-xl mb-4">
+                  🤝
+                </div>
+                <span class="text-xs text-primary font-bold uppercase">Nhóm 03</span>
+                <h3 class="text-base font-bold text-on-surface mt-1 mb-2">Người tập cùng PT</h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                  Cần lịch trống rõ ràng của huấn luyện viên, quy trình đặt lịch minh bạch và bảng nhật ký dinh dưỡng để trao đổi trực tiếp với huấn luyện viên trong các buổi kiểm tra số đo.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-surface-container text-xs">
+                <span class="font-bold text-on-surface">Tính năng cốt lõi:</span>
+                <p class="text-on-surface-variant mt-0.5">Hồ sơ PT đã duyệt • Đặt lịch và chat riêng tư</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 12. CÂU HỎI THƯỜNG GẶP (FAQ) -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface-container-low/40 border-t border-outline-variant/30" id="faq">
+        <div class="max-w-[860px] mx-auto px-margin md:px-margin-tablet">
+          <div class="text-center mb-10">
+            <span class="text-xs text-primary font-bold tracking-wider uppercase">Giải đáp minh bạch</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight mt-1">
+              Câu hỏi thường gặp
+            </h2>
+            <p class="text-base text-on-surface-variant mt-2">
+              Những thông tin cần biết để bạn an tâm sử dụng Fitmate mỗi ngày.
+            </p>
+
+            <!-- FAQ Realtime Search Input -->
+            <div class="mt-6 max-w-md mx-auto relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+              <input id="faq-search-input" type="text" placeholder="Tìm kiếm câu hỏi (vd: PT, quét món, calo, hủy lịch...)" class="w-full bg-surface-container-lowest pl-11 pr-4 py-2.5 rounded-full text-xs text-on-surface border border-outline-variant/40 focus:outline-none focus:border-primary-container shadow-xs" oninput="filterFAQ()"/>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3" id="faq-accordion-list">
+            
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>1. Fitmate phù hợp với ai?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Fitmate phù hợp cho cả người mới bắt đầu muốn hình thành thói quen rèn luyện, người bận rộn cần giải pháp ghi nhận dinh dưỡng tinh gọn, cũng như người đang tập luyện nghiêm túc cùng huấn luyện viên cá nhân.
+              </div>
+            </div>
+
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>2. Tôi có thể tự tạo kế hoạch tập riêng không?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Có. Bạn có thể tự do chọn bài tập từ thư viện, điều chỉnh số hiệp (sets), số lần lặp (reps), mức tạ dự kiến và thời gian nghỉ giữa các hiệp theo giáo án của riêng bạn.
+              </div>
+            </div>
+
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>3. Kết quả quét món ăn có chính xác tuyệt đối không?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Không có hệ thống quét hình ảnh nào đạt độ chính xác 100% đối với mọi công thức nấu. Fitmate hiển thị các thành phần bóc tách để bạn kiểm tra và tự điều chỉnh khẩu phần (0.5x, 1.0x, 1.5x) trước khi bấm lưu.
+              </div>
+            </div>
+
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>4. AI có thay thế bác sĩ hoặc PT không?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Không. Fitmate AI chỉ đóng vai trò trợ lý thông tin hỗ trợ bạn tham khảo. AI không chẩn đoán bệnh tật, không kê đơn y khoa và không thay thế huấn luyện viên thể thao chuyên nghiệp.
+              </div>
+            </div>
+
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>5. Huấn luyện viên được xét duyệt như thế nào?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Khi đăng ký tài khoản PT, huấn luyện viên bắt buộc phải tải lên giấy tờ tùy thân, bằng cấp hoặc chứng chỉ huấn luyện thể thao hợp lệ để đội ngũ quản trị viên xét duyệt trước khi mở tính năng nhận lịch.
+              </div>
+            </div>
+
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>6. Tôi có thể hủy lịch tập đã đặt không?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Có. Hội viên được quyền chủ động hủy lịch trước giờ hẹn ít nhất 24 giờ theo chính sách công bố minh bạch trên ứng dụng để bảo đảm quyền lợi cho cả hai bên.
+              </div>
+            </div>
+
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>7. Tôi có thể tắt quyền camera và thông báo không?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Có. Bạn có thể bật hoặc tắt quyền truy cập camera và thông báo nhắc nhở bất cứ lúc nào trong cài đặt ứng dụng hoặc cài đặt hệ điều hành mà không bị khóa tài khoản.
+              </div>
+            </div>
+
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>8. Tôi có thể xuất hoặc yêu cầu xóa dữ liệu cá nhân không?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Có. Fitmate hỗ trợ tính năng xuất toàn bộ dữ liệu lịch sử sức khỏe và quyền gửi yêu cầu xóa tài khoản cùng dữ liệu cá nhân bất cứ khi nào bạn muốn.
+              </div>
+            </div>
+
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>9. Fitmate hỗ trợ những nền tảng nào?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Ứng dụng hiện hỗ trợ đầy đủ trên nền tảng Web, Android và iOS, được tối ưu hóa giao diện mượt mà và trực quan trên mọi kích thước màn hình.
+              </div>
+            </div>
+
+            <div class="faq-card bg-surface-container-lowest rounded-2xl overflow-hidden shadow-xs border border-outline-variant/30">
+              <button onclick="toggleFAQItem(this)" class="w-full p-4 text-left flex items-center justify-between font-bold text-sm text-on-surface">
+                <span>10. Làm sao để nâng cấp hạn mức AI?</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200">expand_more</span>
+              </button>
+              <div class="faq-content hidden px-4 pb-4 text-xs text-on-surface-variant leading-relaxed">
+                Tài khoản miễn phí được cung cấp hạn mức hỏi đáp AI mỗi ngày. Khi gói Nâng Cao chính thức mở, bạn có thể dễ dàng nâng cấp trực tiếp trong ứng dụng.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- 13. CTA CUỐI TRANG -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="py-20 md:py-24 bg-surface" id="download">
+        <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+          <div class="relative rounded-[36px] bg-gradient-to-br from-primary to-on-primary-container text-white p-8 md:p-14 overflow-hidden shadow-2xl">
+            <div class="absolute -bottom-16 -right-16 w-80 h-80 bg-primary-container/20 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+              <div class="lg:col-span-8 flex flex-col gap-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold w-fit">
+                  <span class="material-symbols-outlined text-[16px]">stars</span> Hành trình mới bắt đầu hôm nay
+                </span>
+                <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight leading-tight">
+                  Bắt đầu xây dựng phiên bản khỏe mạnh hơn của bạn
+                </h2>
+                <p class="text-sm md:text-base text-white/80 max-w-xl leading-relaxed">
+                  Theo dõi calo, ghi nhận bài tập, kết nối huấn luyện viên và tiến bộ mỗi ngày trong một trải nghiệm thống nhất.
+                </p>
+                <div class="flex flex-wrap items-center gap-4 pt-2">
+                  <button onclick="openEarlyAccessModal()" class="px-8 py-3.5 rounded-full bg-primary-container hover:bg-white text-on-primary-container hover:text-primary font-bold text-sm shadow-lg hover:scale-105 active:scale-95 transition-all">
+                    Trải nghiệm Fitmate ngay
+                  </button>
+                  <a href="#features" class="px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-sm transition-all">
+                    Khám phá tính năng
+                  </a>
+                </div>
+                <p class="text-[11px] text-white/60 pt-1">
+                  Khởi đầu hoàn toàn miễn phí. Đã sẵn sàng trên nền tảng Android, iOS và Web.
+                </p>
+              </div>
+
+              <!-- QR Code Mockup -->
+              <div class="lg:col-span-4 flex justify-center lg:justify-end">
+                <div class="bg-white p-5 rounded-3xl shadow-xl flex flex-col items-center gap-3 text-center max-w-[220px]">
+                  <div class="w-36 h-36 bg-surface-container-low rounded-2xl p-2.5 flex items-center justify-center">
+                    <svg class="w-full h-full text-on-surface" fill="currentColor" viewBox="0 0 100 100">
+                      <path d="M0 0h30v30H0zM10 10h10v10H10zM70 0h30v30H70zM80 10h10v10H80zM0 70h30v30H0zM10 80h10v10H10zM40 10h10v10H40zM50 20h10v10H50zM40 40h20v20H40zM70 50h10v10H70zM80 40h20v10H80zM10 40h10v20H10zM30 50h10v10H30zM50 70h10v30H50zM70 70h30v10H70zM80 90h20v10H80zM40 90h10v10H40z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="font-bold text-on-surface text-xs">Quét mã QR</p>
+                    <p class="text-[10px] text-on-surface-variant">Tải trải nghiệm phiên bản mới</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- FOOTER -->
+  <!-- ========================================================================= -->
+  <footer class="w-full bg-inverse-surface text-inverse-on-surface py-16 border-t border-white/10">
+    <div class="max-w-[1280px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-primary-container text-white flex items-center justify-center">
+              <span class="material-symbols-outlined text-[20px]">vital_signs</span>
+            </div>
+            <span class="text-xl tracking-tight text-white font-extrabold">Fitmate</span>
+          </div>
+          <p class="text-xs text-surface-variant/80 leading-relaxed">
+            Nền tảng sức khỏe, dinh dưỡng, nhật ký tập luyện và kết nối huấn luyện viên cá nhân toàn diện hàng đầu.
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <h3 class="font-bold text-white text-sm mb-1">Sản phẩm</h3>
+          <ul class="flex flex-col gap-1.5 text-xs text-surface-variant/80">
+            <li><a class="hover:text-primary-container transition-colors" href="#features">Hệ sinh thái</a></li>
+            <li><a class="hover:text-primary-container transition-colors" href="#nutrition">Dinh dưỡng AI</a></li>
+            <li><a class="hover:text-primary-container transition-colors" href="#workout-plan">Nhật ký tập luyện</a></li>
+            <li><a class="hover:text-primary-container transition-colors" href="#coaches">Huấn luyện viên cá nhân</a></li>
+            <li><a class="hover:text-primary-container transition-colors" href="#fitmate-ai">Fitmate AI</a></li>
+          </ul>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <h3 class="font-bold text-white text-sm mb-1">Hỗ trợ & Hướng dẫn</h3>
+          <ul class="flex flex-col gap-1.5 text-xs text-surface-variant/80">
+            <li><a class="hover:text-primary-container transition-colors" href="#faq">Câu hỏi thường gặp (FAQ)</a></li>
+            <li><a class="hover:text-primary-container transition-colors" href="#coaches">Chính sách đặt hẹn PT</a></li>
+            <li><a class="hover:text-primary-container transition-colors" href="javascript:void(0)" onclick="exportUserDataDemo()">Xuất dữ liệu sức khỏe</a></li>
+          </ul>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <h3 class="font-bold text-white text-sm mb-1">Liên hệ & Hợp tác</h3>
+          <ul class="flex flex-col gap-1.5 text-xs text-surface-variant/80">
+            <li class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-primary-container">mail</span> lienhe@fitmate.vn</li>
+            <li class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-primary-container">support_agent</span> Hotline: 1900 6868</li>
+            <li class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-primary-container">location_on</span> TP. Hồ Chí Minh, Việt Nam</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-surface-variant/60">
+        <p>© 2026 Fitmate Technologies. Tất cả quyền được bảo lưu.</p>
+        <div class="flex items-center gap-4">
+          <a href="#faq" class="hover:text-white transition-colors">Điều khoản dịch vụ</a>
+          <span>•</span>
+          <a href="#faq" class="hover:text-white transition-colors">Chính sách quyền riêng tư</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ĐĂNG KÝ TRẢI NGHIỆM SỚM -->
+  <!-- ========================================================================= -->
+  <div id="early-access-modal" class="fixed inset-0 z-[99] hidden flex items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0" onclick="closeEarlyAccessModal()"></div>
+    <div class="modal-content relative bg-surface-container-lowest rounded-[32px] p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-outline-variant/40 z-10">
+      
+      <button onclick="closeEarlyAccessModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-all">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+        </div>
+        <span class="text-xs font-bold text-primary uppercase">Trải nghiệm sớm</span>
+      </div>
+
+      <h3 class="text-xl font-black text-on-surface tracking-tight">
+        Đăng ký trải nghiệm Fitmate
+      </h3>
+      <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">
+        Nhận quyền truy cập sớm, mã ưu đãi thành viên và các cập nhật mới nhất từ Fitmate.
+      </p>
+
+      <form id="early-access-form" onsubmit="handleEarlyAccessSubmit(event)" class="space-y-3.5 mt-5">
+        <div>
+          <label class="block text-xs font-bold text-on-surface mb-1">Họ và tên *</label>
+          <input type="text" id="lead-name" required placeholder="Nguyễn Văn A" class="w-full bg-surface-container-low px-3.5 py-2.5 rounded-xl text-xs text-on-surface border border-outline-variant/40 focus:outline-none focus:border-primary-container"/>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-on-surface mb-1">Số điện thoại *</label>
+            <input type="tel" id="lead-phone" required placeholder="0912 345 678" class="w-full bg-surface-container-low px-3.5 py-2.5 rounded-xl text-xs text-on-surface border border-outline-variant/40 focus:outline-none focus:border-primary-container"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-on-surface mb-1">Email *</label>
+            <input type="email" id="lead-email" required placeholder="example@gmail.com" class="w-full bg-surface-container-low px-3.5 py-2.5 rounded-xl text-xs text-on-surface border border-outline-variant/40 focus:outline-none focus:border-primary-container"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-on-surface mb-1">Mục tiêu rèn luyện</label>
+          <select id="lead-goal" class="w-full bg-surface-container-low px-3.5 py-2.5 rounded-xl text-xs text-on-surface border border-outline-variant/40 focus:outline-none focus:border-primary-container">
+            <option value="Giảm mỡ & Siết cân">Giảm mỡ & Siết cân</option>
+            <option value="Tăng cơ nạc (Hypertrophy)">Tăng cơ nạc (Hypertrophy)</option>
+            <option value="Ăn uống lành mạnh, kiểm soát calo">Ăn uống lành mạnh, kiểm soát calo</option>
+            <option value="Tìm huấn luyện viên cá nhân (PT)">Tìm huấn luyện viên cá nhân (PT)</option>
+            <option value="Tập Calisthenics & Dẻo dai">Tập Calisthenics & Dẻo dai</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-on-surface mb-1">Nền tảng sử dụng</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center gap-1.5 p-2 rounded-xl bg-surface-container-low text-xs cursor-pointer border border-transparent has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/10">
+              <input type="radio" name="lead-platform" value="Android" checked class="accent-primary"/>
+              <span>Android</span>
+            </label>
+            <label class="flex items-center gap-1.5 p-2 rounded-xl bg-surface-container-low text-xs cursor-pointer border border-transparent has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/10">
+              <input type="radio" name="lead-platform" value="iOS" class="accent-primary"/>
+              <span>iOS</span>
+            </label>
+            <label class="flex items-center gap-1.5 p-2 rounded-xl bg-surface-container-low text-xs cursor-pointer border border-transparent has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/10">
+              <input type="radio" name="lead-platform" value="Web" class="accent-primary"/>
+              <span>Web</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" id="lead-submit-btn" class="w-full py-3.5 rounded-full bg-gradient-to-r from-primary-container to-primary hover:opacity-90 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 mt-2">
+          <span>Xác nhận đăng ký</span>
+          <span class="material-symbols-outlined text-[16px]">check</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: XÁC NHẬN ĐĂNG KÝ THÀNH CÔNG -->
+  <!-- ========================================================================= -->
+  <div id="pass-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0" onclick="closePassModal()"></div>
+    <div class="modal-content relative bg-surface-container-lowest rounded-[32px] p-6 sm:p-8 max-w-md w-full shadow-2xl border border-outline-variant/40 z-10 text-center">
+      
+      <div class="w-16 h-16 rounded-full bg-primary-container/20 text-primary flex items-center justify-center mx-auto mb-3">
+        <span class="material-symbols-outlined text-[36px]">verified</span>
+      </div>
+
+      <h3 class="text-xl font-black text-on-surface">Đăng ký thành công!</h3>
+      <p class="text-xs text-on-surface-variant mt-1" id="pass-welcome-msg">
+        Chào mừng bạn đã gia nhập cộng đồng Fitmate.
+      </p>
+
+      <div class="my-5 p-4 rounded-2xl bg-surface-container-low border border-primary-container/40 flex flex-col gap-2 text-left">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-on-surface-variant font-medium">Mã thành viên:</span>
+          <span id="pass-code-display" class="font-mono font-bold text-primary text-sm">FITMATE-7821</span>
+        </div>
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-on-surface-variant font-medium">Họ tên:</span>
+          <span id="pass-name-display" class="font-bold text-on-surface">Nguyễn Văn A</span>
+        </div>
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-on-surface-variant font-medium">Mục tiêu:</span>
+          <span id="pass-goal-display" class="font-bold text-on-surface">Tăng cơ nạc</span>
+        </div>
+      </div>
+
+      <button onclick="closePassModal()" class="w-full py-3 rounded-full bg-primary-container hover:bg-primary text-white font-bold text-xs shadow-md transition-all">
+        Bắt đầu khám phá
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ĐẶT LỊCH PT -->
+  <!-- ========================================================================= -->
+  <div id="pt-booking-modal" class="fixed inset-0 z-[99] hidden flex items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0" onclick="closeBookingModal()"></div>
+    <div class="modal-content relative bg-surface-container-lowest rounded-[32px] p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-outline-variant/40 z-10">
+      
+      <button onclick="closeBookingModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-all">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+
+      <div class="flex items-center gap-2 mb-1">
+        <span class="material-symbols-outlined text-primary text-[20px]">calendar_month</span>
+        <span class="text-xs font-bold text-primary uppercase">Đặt lịch Huấn luyện viên</span>
+      </div>
+
+      <h3 class="text-lg font-black text-on-surface" id="booking-coach-name">
+        HLV Nguyễn Hoàng Nam
+      </h3>
+      <p class="text-xs text-on-surface-variant" id="booking-coach-detail">
+        Chứng chỉ NASM CPT • Biểu phí: 350.000đ / buổi
+      </p>
+
+      <form id="pt-booking-form" onsubmit="handlePTBookingSubmit(event)" class="space-y-4 mt-5">
+        <div>
+          <label class="block text-xs font-bold text-on-surface mb-1">1. Chọn ngày tập</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center justify-center p-2 rounded-xl bg-surface-container-low text-xs cursor-pointer border border-transparent has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/10 font-bold">
+              <input type="radio" name="booking-date" value="Hôm nay" checked class="hidden"/>
+              <span>Hôm nay</span>
+            </label>
+            <label class="flex items-center justify-center p-2 rounded-xl bg-surface-container-low text-xs cursor-pointer border border-transparent has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/10 font-bold">
+              <input type="radio" name="booking-date" value="Ngày mai" class="hidden"/>
+              <span>Ngày mai</span>
+            </label>
+            <label class="flex items-center justify-center p-2 rounded-xl bg-surface-container-low text-xs cursor-pointer border border-transparent has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/10 font-bold">
+              <input type="radio" name="booking-date" value="Cuối tuần" class="hidden"/>
+              <span>Cuối tuần</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-on-surface mb-1">2. Chọn khung giờ trống</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center justify-center p-2 rounded-xl bg-surface-container-low text-xs cursor-pointer border border-transparent has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/10 font-medium">
+              <input type="radio" name="booking-time" value="07:00 - 08:30" checked class="hidden"/>
+              <span>07:00 (Sáng)</span>
+            </label>
+            <label class="flex items-center justify-center p-2 rounded-xl bg-surface-container-low text-xs cursor-pointer border border-transparent has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/10 font-medium">
+              <input type="radio" name="booking-time" value="15:30 - 17:00" class="hidden"/>
+              <span>15:30 (Chiều)</span>
+            </label>
+            <label class="flex items-center justify-center p-2 rounded-xl bg-surface-container-low text-xs cursor-pointer border border-transparent has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/10 font-medium">
+              <input type="radio" name="booking-time" value="18:30 - 20:00" class="hidden"/>
+              <span>18:30 (Tối)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-on-surface mb-1">Họ tên hội viên *</label>
+            <input type="text" id="booking-name" required placeholder="Tên bạn" class="w-full bg-surface-container-low px-3 py-2 rounded-xl text-xs text-on-surface border border-outline-variant/40 focus:outline-none focus:border-primary-container"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-on-surface mb-1">Số điện thoại *</label>
+            <input type="tel" id="booking-phone" required placeholder="09xx..." class="w-full bg-surface-container-low px-3 py-2 rounded-xl text-xs text-on-surface border border-outline-variant/40 focus:outline-none focus:border-primary-container"/>
+          </div>
+        </div>
+
+        <div class="p-3 bg-surface-container-low rounded-xl text-xs flex items-center justify-between border border-outline-variant/30">
+          <div>
+            <span class="text-on-surface-variant block text-[10px]">Học phí niêm yết:</span>
+            <span id="booking-total-price" class="font-extrabold text-primary text-sm">350.000 VNĐ</span>
+          </div>
+          <span class="text-[10px] text-on-surface-variant text-right">Miễn phí hủy hẹn<br/>trước 24 giờ</span>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-full bg-primary-container hover:bg-primary text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
+          <span>Xác nhận đặt lịch tập</span>
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: CHIA SẺ BÀI VIẾT -->
+  <!-- ========================================================================= -->
+  <div id="share-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0" onclick="closeShareModal()"></div>
+    <div class="modal-content relative bg-surface-container-lowest rounded-[32px] p-6 max-w-sm w-full shadow-2xl border border-outline-variant/40 z-10 text-center">
+      <button onclick="closeShareModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-all">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+
+      <h3 class="text-base font-bold text-on-surface mb-2">Chia sẻ bài viết</h3>
+      <p class="text-xs text-on-surface-variant mb-4">Lan tỏa hành trình tập luyện lành mạnh cùng bạn bè</p>
+
+      <div class="flex items-center gap-2 p-2 bg-surface-container-low rounded-xl mb-4 text-xs">
+        <input type="text" readonly value="https://fitmate.vn/community/post/tuan-pullup-782" id="share-link-input" class="bg-transparent flex-1 text-on-surface-variant text-[11px] focus:outline-none truncate"/>
+        <button onclick="copyShareLink()" class="px-3 py-1 bg-primary-container text-white rounded-lg font-bold text-xs">Sao chép</button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <button onclick="showToast('Đã mở chia sẻ qua Facebook'); closeShareModal()" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold">Facebook</button>
+        <button onclick="showToast('Đã mở chia sẻ qua Zalo'); closeShareModal()" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold">Zalo</button>
+        <button onclick="showToast('Đã sao chép liên kết'); closeShareModal()" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold">Khác</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: PRODUCTION INTERACTION ENGINE -->
+  <!-- ========================================================================= -->
+  <script>
+    /* 1. Global Toast Manager */
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = `pointer-events-auto flex items-center gap-2 px-4 py-3 rounded-2xl shadow-xl text-xs font-semibold text-white transition-all transform duration-300 translate-y-4 opacity-0 ${
+        type === 'success' ? 'bg-[#006c49]' : type === 'error' ? 'bg-[#ba1a1a]' : 'bg-[#1e2638]'
+      }`;
+      
+      const iconName = type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info';
+      toast.innerHTML = `
+        <span class="material-symbols-outlined text-[18px] text-inverse-primary">${iconName}</span>
+        <span class="flex-1">${message}</span>
+        <button class="opacity-70 hover:opacity-100 ml-2" onclick="this.parentElement.remove()">
+          <span class="material-symbols-outlined text-[14px]">close</span>
+        </button>
+      `;
+
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    /* 2. Mobile Drawer & Navbar Scrollspy */
+    const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+    const mobileDrawer = document.getElementById('mobile-drawer');
+
+    if (mobileNavToggle && mobileDrawer) {
+      mobileNavToggle.addEventListener('click', () => {
+        mobileDrawer.classList.toggle('hidden');
+      });
+    }
+
+    function closeMobileDrawer() {
+      if (mobileDrawer) mobileDrawer.classList.add('hidden');
+    }
+
+    window.addEventListener('scroll', () => {
+      const sections = ['home', 'features', 'nutrition', 'workout-plan', 'coaches', 'community', 'fitmate-ai', 'pricing', 'faq'];
+      const scrollPos = window.scrollY + 120;
+
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const top = el.offsetTop;
+        const height = el.offsetHeight;
+        if (scrollPos >= top && scrollPos < top + height) {
+          document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('bg-primary-container', 'text-white', 'shadow-sm');
+              link.classList.remove('text-on-surface-variant');
+            } else {
+              link.classList.remove('bg-primary-container', 'text-white', 'shadow-sm');
+              link.classList.add('text-on-surface-variant');
+            }
+          });
+        }
+      });
+    });
+
+    /* 3. Dinh Dưỡng AI (Interactive Food Scanner) */
+    const foodPresets = [
+      {
+        name: 'Phở Bò Tái Nạm',
+        confidence: '96%',
+        img: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&w=800&q=80',
+        ingredients: ['Thịt bò tái 150g', 'Bánh phở tươi 200g', 'Nước dùng hầm xương', 'Hành lá & rau thơm'],
+        baseCal: 540,
+        baseProtein: 38,
+        baseCarb: 62,
+        baseFat: 12
+      },
+      {
+        name: 'Cơm Tấm Sườn Bì Chả',
+        confidence: '98%',
+        img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+        ingredients: ['Sườn nướng mật ong 180g', 'Cơm tấm thơm 220g', 'Chả trứng hấp & bì 70g', 'Đồ chua & dưa leo'],
+        baseCal: 780,
+        baseProtein: 44,
+        baseCarb: 85,
+        baseFat: 28
+      },
+      {
+        name: 'Salad Ức Gà Bơ Sốt Mè',
+        confidence: '95%',
+        img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80',
+        ingredients: ['Ức gà áp chảo 200g', 'Quả bơ sáp 60g', 'Xà lách Romaine & cà chua bi', 'Sốt mè rang Nhật'],
+        baseCal: 420,
+        baseProtein: 42,
+        baseCarb: 18,
+        baseFat: 16
+      },
+      {
+        name: 'Bún Bò Huế Chả Cua',
+        confidence: '97%',
+        img: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80',
+        ingredients: ['Bắp bò hoa thái mỏng 120g', 'Chả cua Huế 60g', 'Bún sợi to 180g', 'Rau muống chẻ & bắp chuối'],
+        baseCal: 620,
+        baseProtein: 36,
+        baseCarb: 70,
+        baseFat: 20
+      }
+    ];
+
+    let currentFoodIdx = 0;
+    let currentPortion = 1.0;
+
+    function selectFoodPreset(index) {
+      currentFoodIdx = index;
+      const data = foodPresets[index];
+
+      document.querySelectorAll('#food-preset-pills .food-pill').forEach((btn, i) => {
+        if (i === index) {
+          btn.className = 'food-pill active px-3 py-1 rounded-full text-xs font-semibold bg-primary-container text-white transition-all whitespace-nowrap';
+        } else {
+          btn.className = 'food-pill px-3 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface transition-all whitespace-nowrap';
+        }
+      });
+
+      const imgEl = document.getElementById('scanned-food-img');
+      const labelEl = document.getElementById('scanned-food-label');
+      const laserEl = document.getElementById('scanner-laser');
+
+      if (laserEl) laserEl.style.display = 'block';
+      if (imgEl) {
+        imgEl.style.opacity = '0.5';
+        setTimeout(() => {
+          imgEl.src = data.img;
+          imgEl.style.opacity = '1';
+        }, 150);
+      }
+
+      if (labelEl) {
+        labelEl.innerHTML = `
+          <span class="material-symbols-outlined text-primary-container text-[18px]">verified</span>
+          <span>Đã nhận diện: ${data.name} (Độ tin cậy ${data.confidence})</span>
+        `;
+      }
+
+      const chipsEl = document.getElementById('ingredients-chips');
+      if (chipsEl) {
+        chipsEl.innerHTML = data.ingredients.map(ing => 
+          `<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant text-[11px] font-medium">${ing}</span>`
+        ).join('');
+      }
+
+      updateMacrosDisplay();
+      showToast(`Đã nhận diện món: ${data.name}`);
+    }
+
+    function setPortion(multiplier) {
+      currentPortion = multiplier;
+      document.querySelectorAll('#portion-buttons .portion-btn').forEach(btn => {
+        if (btn.textContent.trim() === `${multiplier.toFixed(1)}x`) {
+          btn.className = 'portion-btn active px-2.5 py-1 rounded-full bg-surface-container-lowest shadow-sm text-primary transition-all';
+        } else {
+          btn.className = 'portion-btn px-2.5 py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all';
+        }
+      });
+      updateMacrosDisplay();
+    }
+
+    function updateMacrosDisplay() {
+      const data = foodPresets[currentFoodIdx];
+      const calo = Math.round(data.baseCal * currentPortion);
+      const protein = Math.round(data.baseProtein * currentPortion);
+      const carb = Math.round(data.baseCarb * currentPortion);
+      const fat = Math.round(data.baseFat * currentPortion);
+
+      document.getElementById('macro-calo').textContent = calo;
+      document.getElementById('macro-protein').textContent = `${protein}g`;
+      document.getElementById('macro-carb').textContent = `${carb}g`;
+      document.getElementById('macro-fat').textContent = `${fat}g`;
+    }
+
+    function confirmSaveMeal() {
+      const saveBtn = document.getElementById('save-meal-btn');
+      const data = foodPresets[currentFoodIdx];
+      const addedCal = Math.round(data.baseCal * currentPortion);
+
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = `
+        <span class="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
+        <span>Đang ghi nhận...</span>
+      `;
+
+      setTimeout(() => {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[18px]">check_circle</span>
+          <span>Lưu vào nhật ký dinh dưỡng</span>
+        `;
+
+        const heroCal = document.getElementById('hero-cal-display');
+        const heroBar = document.getElementById('hero-cal-bar');
+        if (heroCal) heroCal.textContent = `2,120 / 2,200 kcal`;
+        if (heroBar) heroBar.style.width = '96%';
+
+        showToast(`✓ Đã lưu ${data.name} (${addedCal} kcal) vào nhật ký dinh dưỡng hôm nay!`);
+      }, 500);
+    }
+
+    const customUploadInput = document.getElementById('custom-food-upload');
+    if (customUploadInput) {
+      customUploadInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            const imgEl = document.getElementById('scanned-food-img');
+            if (imgEl) imgEl.src = evt.target.result;
+            document.getElementById('scanned-food-label').innerHTML = `
+              <span class="material-symbols-outlined text-primary-container text-[18px]">auto_awesome</span>
+              <span>Đã nhận diện từ ảnh của bạn: Món ăn gia đình</span>
+            `;
+            showToast('Đã tải ảnh lên và nhận diện khẩu phần ăn!');
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    /* 4. Tập Luyện Trực Tiếp (Live Workout) */
+    let restSeconds = 42;
+    let isTimerRunning = true;
+    let restTimerInterval = setInterval(() => {
+      if (isTimerRunning && restSeconds > 0) {
+        restSeconds--;
+        renderRestTimer();
+      } else if (restSeconds === 0) {
+        document.getElementById('rest-timer-display').textContent = '00:00';
+        document.getElementById('rest-timer-display').className = 'font-mono text-2xl font-black text-white tracking-wider animate-pulse';
+      }
+    }, 1000);
+
+    function renderRestTimer() {
+      const min = Math.floor(restSeconds / 60).toString().padStart(2, '0');
+      const sec = (restSeconds % 60).toString().padStart(2, '0');
+      const el = document.getElementById('rest-timer-display');
+      if (el) el.textContent = `${min}:${sec}`;
+    }
+
+    function toggleRestTimer() {
+      isTimerRunning = !isTimerRunning;
+      const icon = document.getElementById('rest-timer-btn-icon');
+      if (icon) icon.textContent = isTimerRunning ? 'pause' : 'play_arrow';
+      showToast(isTimerRunning ? 'Đã tiếp tục đếm giờ nghỉ' : 'Đã tạm dừng đếm giờ nghỉ');
+    }
+
+    function addRestTimer(amount) {
+      restSeconds += amount;
+      renderRestTimer();
+      showToast(`Đã cộng thêm +${amount}s vào thời gian nghỉ`);
+    }
+
+    const setStatusMap = { 1: 'done', 2: 'resting', 3: 'waiting', 4: 'waiting' };
+
+    function toggleSetStatus(setNumber) {
+      const current = setStatusMap[setNumber];
+      const badge = document.getElementById(`set-badge-${setNumber}`);
+      
+      if (current === 'done') {
+        setStatusMap[setNumber] = 'waiting';
+        badge.textContent = '▶ Chờ tập';
+        badge.className = 'text-white/40 flex items-center gap-1';
+      } else if (current === 'resting') {
+        setStatusMap[setNumber] = 'done';
+        badge.textContent = '✓ Hoàn thành';
+        badge.className = 'text-inverse-primary font-bold flex items-center gap-1';
+        showToast(`✓ Đã hoàn thành Hiệp ${setNumber}!`);
+      } else {
+        setStatusMap[setNumber] = 'resting';
+        badge.textContent = '⏳ Đang nghỉ';
+        badge.className = 'text-inverse-primary font-bold flex items-center gap-1';
+        restSeconds = 60;
+        renderRestTimer();
+        showToast(`Bắt đầu đếm thời gian nghỉ cho Hiệp ${setNumber}`);
+      }
+
+      let completedCount = 0;
+      for (let i = 1; i <= 4; i++) {
+        if (setStatusMap[i] === 'done') completedCount++;
+      }
+      const percent = (completedCount / 4) * 100;
+      document.getElementById('workout-progress-bar').style.width = `${percent}%`;
+    }
+
+    let tuningWeight = 60;
+    let tuningReps = 10;
+
+    function adjustWeight(delta) {
+      tuningWeight = Math.max(20, tuningWeight + delta);
+      document.getElementById('tuning-weight-display').textContent = `${tuningWeight} kg`;
+      document.getElementById('active-set-summary').textContent = `Hiệp 2/4 • Mục tiêu ${tuningReps} lần • ${tuningWeight} kg`;
+    }
+
+    function adjustReps(delta) {
+      tuningReps = Math.max(1, tuningReps + delta);
+      document.getElementById('tuning-reps-display').textContent = tuningReps;
+      document.getElementById('active-set-summary').textContent = `Hiệp 2/4 • Mục tiêu ${tuningReps} lần • ${tuningWeight} kg`;
+    }
+
+    function finishWorkoutSession() {
+      showToast('🎉 Chúc mừng bạn đã hoàn thành buổi tập hôm nay! Chuỗi ngày liên tiếp tăng lên 8 ngày.');
+    }
+
+    /* 5. Huấn Luyện Viên (PT Directory & Booking) */
+    function filterPT(category) {
+      document.querySelectorAll('#pt-filter-pills .pt-filter').forEach(btn => {
+        btn.className = 'pt-filter px-3.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface transition-all';
+      });
+      event.target.className = 'pt-filter active px-3.5 py-1 rounded-full text-xs font-bold bg-primary text-white transition-all';
+
+      const cards = document.querySelectorAll('.pt-card');
+      cards.forEach(card => {
+        if (category === 'all' || card.dataset.specialty.includes(category)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    let selectedCoach = { name: '', price: '', cert: '' };
+
+    function openBookingModal(name, price, cert) {
+      selectedCoach = { name, price, cert };
+      document.getElementById('booking-coach-name').textContent = `HLV ${name}`;
+      document.getElementById('booking-coach-detail').textContent = `Chứng chỉ: ${cert} • Biểu phí: ${price} / buổi`;
+      document.getElementById('booking-total-price').textContent = `${price} VNĐ`;
+      document.getElementById('pt-booking-modal').classList.remove('hidden');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('pt-booking-modal').classList.add('hidden');
+    }
+
+    function handlePTBookingSubmit(e) {
+      e.preventDefault();
+      const date = document.querySelector('input[name="booking-date"]:checked')?.value || 'Hôm nay';
+      const time = document.querySelector('input[name="booking-time"]:checked')?.value || '18:30';
+
+      closeBookingModal();
+      showToast(`🎉 Đã đặt lịch thành công cùng HLV ${selectedCoach.name} lúc ${time} (${date})!`);
+    }
+
+    /* 6. Cộng Đồng (Community Feed) */
+    const postPhotos = [
+      'https://images.unsplash.com/photo-1598971861713-54ad16a7e72e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=800&q=80'
+    ];
+    let currentPhotoIdx = 0;
+
+    function renderPostCarousel() {
+      const img = document.getElementById('carousel-post-img');
+      const badge = document.getElementById('carousel-counter-badge');
+      if (img) img.src = postPhotos[currentPhotoIdx];
+      if (badge) badge.textContent = `${currentPhotoIdx + 1}/3`;
+
+      const dots = document.querySelectorAll('#carousel-dots .dot-item');
+      dots.forEach((dot, idx) => {
+        if (idx === currentPhotoIdx) {
+          dot.className = 'dot-item w-4 h-1.5 rounded-full bg-primary-container';
+        } else {
+          dot.className = 'dot-item w-1.5 h-1.5 rounded-full bg-white/60';
+        }
+      });
+    }
+
+    function nextPostPhoto() {
+      currentPhotoIdx = (currentPhotoIdx + 1) % postPhotos.length;
+      renderPostCarousel();
+    }
+
+    function prevPostPhoto() {
+      currentPhotoIdx = (currentPhotoIdx - 1 + postPhotos.length) % postPhotos.length;
+      renderPostCarousel();
+    }
+
+    let isPostLiked = false;
+    let likeCount = 34;
+
+    function togglePostLike() {
+      isPostLiked = !isPostLiked;
+      likeCount = isPostLiked ? likeCount + 1 : likeCount - 1;
+      const countEl = document.getElementById('post-like-count');
+      const iconEl = document.getElementById('post-like-icon');
+      const btnEl = document.getElementById('post-like-btn');
+
+      if (countEl) countEl.textContent = likeCount;
+      if (iconEl) iconEl.textContent = isPostLiked ? 'favorite' : 'favorite_border';
+      if (btnEl) btnEl.className = isPostLiked ? 'flex items-center gap-1.5 text-red-500 font-bold' : 'flex items-center gap-1.5 text-on-surface-variant hover:text-red-500 transition-colors';
+      
+      showToast(isPostLiked ? '❤️ Đã thả tim bài viết' : 'Đã bỏ thả tim');
+    }
+
+    function toggleCommentsDrawer() {
+      const drawer = document.getElementById('comment-drawer');
+      if (drawer) drawer.classList.toggle('hidden');
+    }
+
+    function submitNewComment() {
+      const input = document.getElementById('new-comment-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const list = document.getElementById('comments-list');
+      const commentDiv = document.createElement('div');
+      commentDiv.className = 'p-2 rounded-xl bg-surface-container-low';
+      commentDiv.innerHTML = `<span class="font-bold text-primary">Bạn:</span> <span class="text-on-surface">${text}</span>`;
+      list.appendChild(commentDiv);
+
+      input.value = '';
+      const countEl = document.getElementById('post-comment-count');
+      if (countEl) countEl.textContent = parseInt(countEl.textContent || '3') + 1;
+      showToast('Đã đăng bình luận của bạn!');
+    }
+
+    let isPostBookmarked = false;
+    function togglePostBookmark() {
+      isPostBookmarked = !isPostBookmarked;
+      const icon = document.getElementById('post-bookmark-icon');
+      if (icon) icon.textContent = isPostBookmarked ? 'bookmark' : 'bookmark_border';
+      showToast(isPostBookmarked ? 'Đã lưu bài viết vào mục Yêu thích' : 'Đã bỏ lưu bài viết');
+    }
+
+    function openShareModal() {
+      document.getElementById('share-modal').classList.remove('hidden');
+    }
+    function closeShareModal() {
+      document.getElementById('share-modal').classList.add('hidden');
+    }
+    function copyShareLink() {
+      const input = document.getElementById('share-link-input');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(input.value);
+      }
+      showToast('✓ Đã sao chép liên kết vào bộ nhớ tạm!');
+      closeShareModal();
+    }
+
+    /* 7. Fitmate AI Chat */
+    const aiKnowledge = {
+      'bữa phụ': `Chào bạn! Trước tập ngực 60 phút bạn nên nạp carb hấp thu nhanh (1 quả chuối chín hoặc 1 lát bánh mì) kết hợp 1 hộp sữa chua không đường để cơ bắp đủ năng lượng mà không bị đầy bụng khi nằm ghế Bench Press.`,
+      'tdee': `Để giảm mỡ an toàn, bạn lấy chỉ số TDEE trừ đi 300-500 kcal mỗi ngày. Tỉ lệ macro lý tưởng: 2g protein/kg cân nặng, ưu tiên đạm từ ức gà, trứng và cá. Giữ mức này liên tục 4 tuần bạn sẽ giảm 2-3kg mỡ thừa bền vững.`,
+      'trứng': `1 quả trứng gà ta size vừa (khoảng 50g) cung cấp: 72 kcal, 6.3g Protein chất lượng cao, 4.8g Chất béo lành mạnh và 0.4g Carb. Lòng trắng chứa phần lớn protein tinh khiết, còn lòng đỏ chứa vitamin D, B12 và choline tốt cho não bộ.`,
+      'sinh viên': `Thực đơn tăng cơ 2000 kcal giá rẻ cho sinh viên (~50k/ngày): Bữa sáng: 3 quả trứng luộc + 2 củ khoai lang (15k). Bữa trưa: 200g ức gà luộc xé + cơm trắng + rau muống (20k). Bữa phụ: 1 quả chuối + sữa đậu nành Fami (7k). Bữa tối: 150g cá nục sốt cà + cơm (15k). Đạt chuẩn 120g protein/ngày!`,
+      'lưng': `3 bài tập lưng xô hiệu quả tại nhà không cần tạ nặng: 1. Hít xà đơn (Pull-up) 4 hiệp × 8 reps. 2. Kéo xà dưới gầm bàn (Inverted Row) 4 hiệp × 12 reps. 3. Động tác Superman trên thảm giữ 3 giây 3 hiệp × 15 reps.`
+    };
+
+    function sendAIChatMessage() {
+      const input = document.getElementById('ai-chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendChatMessage('user', text);
+      input.value = '';
+
+      const typingEl = document.getElementById('ai-typing-indicator');
+      if (typingEl) typingEl.classList.remove('hidden');
+
+      setTimeout(() => {
+        if (typingEl) typingEl.classList.add('hidden');
+        
+        let response = `Cảm ơn bạn đã hỏi về "${text}". Đối với mục tiêu này, Fitmate khuyên bạn nên duy trì kỷ luật tập 4 buổi/tuần, bổ sung đủ 2 lít nước và duy trì giấc ngủ 7-8 tiếng mỗi đêm để cơ thể hồi phục tối ưu nhất.`;
+        const lower = text.toLowerCase();
+        for (const [key, val] of Object.entries(aiKnowledge)) {
+          if (lower.includes(key)) {
+            response = val;
+            break;
+          }
+        }
+        appendChatMessage('ai', response);
+      }, 700);
+    }
+
+    function appendChatMessage(sender, text) {
+      const container = document.getElementById('chat-messages-container');
+      if (!container) return;
+
+      const msgDiv = document.createElement('div');
+      if (sender === 'user') {
+        msgDiv.className = 'flex justify-end';
+        msgDiv.innerHTML = `
+          <div class="bg-primary px-4 py-3 rounded-2xl rounded-tr-none max-w-[85%] text-white text-xs leading-relaxed shadow-sm">
+            ${text}
+          </div>
+        `;
+      } else {
+        msgDiv.className = 'flex items-start gap-3';
+        msgDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-inverse-primary text-on-primary-fixed flex items-center justify-center font-bold text-xs flex-shrink-0">
+            AI
+          </div>
+          <div class="bg-white/10 p-4 rounded-2xl rounded-tl-none text-xs text-surface-variant leading-relaxed flex-1 border border-white/5">
+            ${text}
+          </div>
+        `;
+      }
+
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function handleAIChatKey(e) {
+      if (e.key === 'Enter') {
+        sendAIChatMessage();
+      }
+    }
+
+    function askAIPrompt(promptText) {
+      document.getElementById('ai-chat-input').value = promptText;
+      sendAIChatMessage();
+    }
+
+    function startNewAIChat() {
+      const container = document.getElementById('chat-messages-container');
+      if (container) {
+        container.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-inverse-primary text-on-primary-fixed flex items-center justify-center font-bold text-xs flex-shrink-0">
+              AI
+            </div>
+            <div class="bg-white/10 p-4 rounded-2xl rounded-tl-none text-xs text-surface-variant leading-relaxed flex-1 border border-white/5">
+              Chào bạn! Tôi là Fitmate AI. Bạn đang muốn tìm hiểu về dinh dưỡng, lịch tập hay cách chia macro nào hôm nay?
+            </div>
+          </div>
+        `;
+      }
+      showToast('Đã bắt đầu cuộc trò chuyện mới');
+    }
+
+    function switchAIChatThread(index) {
+      document.querySelectorAll('#chat-threads-list .chat-thread').forEach((el, i) => {
+        if (i === index) {
+          el.className = 'chat-thread active p-2.5 rounded-xl bg-white/15 flex items-center justify-between text-xs font-medium text-white cursor-pointer hover:bg-white/20 transition-all';
+        } else {
+          el.className = 'chat-thread p-2.5 rounded-xl bg-white/5 flex items-center justify-between text-xs text-surface-variant/80 cursor-pointer hover:bg-white/10 transition-all';
+        }
+      });
+      if (index === 0) askAIPrompt('Gợi ý bữa phụ trước buổi tập ngực 1 tiếng nhẹ bụng?');
+      if (index === 1) askAIPrompt('Gợi ý 3 bài tập lưng xô tại nhà hiệu quả?');
+      if (index === 2) askAIPrompt('Lượng protein và dinh dưỡng trong 1 quả trứng gà?');
+    }
+
+    /* 8. Pricing Toggle */
+    function setBillingCycle(type) {
+      const monthlyBtn = document.getElementById('billing-monthly-btn');
+      const annualBtn = document.getElementById('billing-annual-btn');
+      const proPrice = document.getElementById('tier-pro-price');
+      const proPeriod = document.getElementById('tier-pro-period');
+
+      if (type === 'annual') {
+        annualBtn.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center gap-1.5';
+        monthlyBtn.className = 'px-4 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all';
+        proPrice.textContent = '95.000đ';
+        proPeriod.textContent = '/ tháng (thanh toán theo năm)';
+        showToast('Áp dụng ưu đãi: Tiết kiệm 20% khi thanh toán 1 năm');
+      } else {
+        monthlyBtn.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-surface-container-lowest text-primary shadow-sm transition-all';
+        annualBtn.className = 'px-4 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5';
+        proPrice.textContent = '119.000đ';
+        proPeriod.textContent = '/ tháng';
+      }
+    }
+
+    /* 9. FAQ Accordion & Search */
+    function toggleFAQItem(btn) {
+      const card = btn.parentElement;
+      const content = card.querySelector('.faq-content');
+      const icon = btn.querySelector('.material-symbols-outlined');
+      const isHidden = content.classList.contains('hidden');
+
+      document.querySelectorAll('.faq-card').forEach(c => {
+        c.querySelector('.faq-content').classList.add('hidden');
+        const ic = c.querySelector('button .material-symbols-outlined');
+        if (ic) ic.style.transform = 'rotate(0deg)';
+      });
+
+      if (isHidden) {
+        content.classList.remove('hidden');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    function filterFAQ() {
+      const query = document.getElementById('faq-search-input').value.toLowerCase();
+      const cards = document.querySelectorAll('.faq-card');
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(query)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    /* 10. Đăng Ký Trải Nghiệm Sớm */
+    function openEarlyAccessModal() {
+      document.getElementById('early-access-modal').classList.remove('hidden');
+    }
+    function closeEarlyAccessModal() {
+      document.getElementById('early-access-modal').classList.add('hidden');
+    }
+
+    function handleEarlyAccessSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('lead-name').value;
+      const goal = document.getElementById('lead-goal').value;
+
+      closeEarlyAccessModal();
+
+      const randomCode = `FITMATE-${Math.floor(1000 + Math.random() * 9000)}`;
+      document.getElementById('pass-code-display').textContent = randomCode;
+      document.getElementById('pass-name-display').textContent = name;
+      document.getElementById('pass-goal-display').textContent = goal;
+      document.getElementById('pass-welcome-msg').textContent = `Chào mừng ${name}! Bạn đã đăng ký thành công quyền truy cập sớm.`;
+      document.getElementById('pass-modal').classList.remove('hidden');
+
+      showToast(`🎉 Đăng ký thành công! Mã thành viên của bạn là ${randomCode}`);
+    }
+
+    function closePassModal() {
+      document.getElementById('pass-modal').classList.add('hidden');
+    }
+
+    function exportUserDataDemo() {
+      const demoData = {
+        user: { name: "Thanh Long", email: "thanhlong@fitmate.vn" },
+        metrics: { targetKcal: 2200, currentKcal: 1850, streakDays: 7 },
+        recentWorkouts: ["Ngực & Tay sau", "Lưng xô & Bắp tay", "Chân mông"],
+        coaches: ["Nguyễn Hoàng Nam (NASM CPT)"]
+      };
+      const blob = new Blob([JSON.stringify(demoData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "fitmate_du_lieu_suc_khoe.json");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('✓ Đã xuất tệp dữ liệu sức khỏe (JSON)');
+    }
+  </script>
+</body>
+</html>

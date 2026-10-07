@@ -1,0 +1,14 @@
+{
+  "name": "fitmate-landing-page",
+  "version": "1.0.0",
+  "description": "Fitmate Wellness Platform Interactive Landing Page - EXE201 FA26",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite --host --port 5174",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
